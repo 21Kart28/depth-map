@@ -1,3 +1,6 @@
+import argparse
+import json
+from pathlib import Path
 from typing import Annotated
 
 from anthropic import Anthropic
@@ -5,10 +8,7 @@ from pydantic import BaseModel, Field, StringConstraints, ValidationError, field
 
 MODEL = "claude-haiku-5-5"
 
-QUESTION = (
-    "What is something you keep telling yourself you'll deal with later? "
-    "What happens when you imagine dealing with it now?"
-)
+QUESTIONS_PATH = Path(__file__).with_name("questions.json")
 
 SYSTEM_PROMPT = """\
 You are a careful, non-clinical listener. The user has answered a reflective question.
@@ -42,10 +42,20 @@ class Analysis(BaseModel):
 
 
 def main():
+    questions = json.loads(QUESTIONS_PATH.read_text(encoding="utf-8"))
+    by_id = {q["id"]: q for q in questions}
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--question-id", choices=list(by_id))
+    args = parser.parse_args()
+
+    question_id = args.question_id or questions[0]["id"]
+    question = by_id[question_id]["text"]
+
     # reads ANTHROPIC_API_KEY from the environment
     client = Anthropic()
 
-    print(QUESTION)
+    print(question)
     response = input("> ")
 
     try:
@@ -53,7 +63,7 @@ def main():
             model=MODEL,
             max_tokens=16000,
             system=SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": f"Question: {QUESTION}\n\nAnswer: {response}"}],
+            messages=[{"role": "user", "content": f"Question: {question}\n\nAnswer: {response}"}],
             output_format=Analysis,
         )
     except ValidationError as error:

@@ -13,3 +13,5 @@ pip install -r requirements.txt
 export ANTHROPIC_API_KEY=your-key     # PowerShell: $env:ANTHROPIC_API_KEY = "your-key"
 python depthmap.py
 ```
+
+It asks the first question in `questions.json`. Pass `--question-id desire-01` (or any other id in that file) to answer a different one.

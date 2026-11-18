@@ -1,0 +1,27 @@
+[
+  {
+    "id": "avoidance-01",
+    "category": "avoidance",
+    "text": "What is something you keep telling yourself you'll deal with later? What happens when you imagine dealing with it now?"
+  },
+  {
+    "id": "relationships-01",
+    "category": "relationships",
+    "text": "Think of the last time you held back from saying something to someone close to you. What did you leave unsaid, and what stopped you?"
+  },
+  {
+    "id": "self-talk-01",
+    "category": "self-talk",
+    "text": "When something you made doesn't go well, what are the first words you say to yourself about it?"
+  },
+  {
+    "id": "recurring-patterns-01",
+    "category": "recurring-patterns",
+    "text": "What kind of situation do you keep ending up in, even after telling yourself next time would be different?"
+  },
+  {
+    "id": "desire-01",
+    "category": "desire",
+    "text": "What is something you want that you rarely admit to wanting? What makes it hard to say out loud?"
+  }
+]
