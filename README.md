@@ -14,4 +14,4 @@ export ANTHROPIC_API_KEY=your-key     # PowerShell: $env:ANTHROPIC_API_KEY = "yo
 python depthmap.py
 ```
 
-It asks the first question in `questions.json`. Pass `--question-id desire-01` (or any other id in that file) to answer a different one.
+It asks one question at a time until you type `q`. The next question is always the one you've answered least in this run, and ties go to whichever comes first in `questions.json`. Pass `--question-id desire-01` (or any other id in that file) to start with a different question.

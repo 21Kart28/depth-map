@@ -41,6 +41,11 @@ class Analysis(BaseModel):
         return value
 
 
+def next_question(questions, counts):
+    # min() returns the first of several equal items, so ties go in file order
+    return min(questions, key=lambda q: counts[q["id"]])
+
+
 def main():
     questions = json.loads(QUESTIONS_PATH.read_text(encoding="utf-8"))
     by_id = {q["id"]: q for q in questions}
@@ -49,40 +54,52 @@ def main():
     parser.add_argument("--question-id", choices=list(by_id))
     args = parser.parse_args()
 
-    question_id = args.question_id or questions[0]["id"]
-    question = by_id[question_id]["text"]
+    counts = {q["id"]: 0 for q in questions}
+    if args.question_id:
+        question = by_id[args.question_id]
+    else:
+        question = next_question(questions, counts)
 
     # reads ANTHROPIC_API_KEY from the environment
     client = Anthropic()
 
-    print(question)
-    response = input("> ")
+    print("Type q to quit.")
+    while True:
+        print()
+        print(question["text"])
+        response = input("> ")
+        if response.strip().lower() == "q":
+            break
 
-    try:
-        message = client.messages.parse(
-            model=MODEL,
-            max_tokens=16000,
-            system=SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": f"Question: {question}\n\nAnswer: {response}"}],
-            output_format=Analysis,
-        )
-    except ValidationError as error:
-        print("\nthe analysis didn't pass validation:")
-        for problem in error.errors():
-            field = ".".join(str(part) for part in problem["loc"])
-            print(f"  {field}: {problem['msg']}")
-        return
-    analysis = message.parsed_output
+        content = f"Question: {question['text']}\n\nAnswer: {response}"
+        try:
+            message = client.messages.parse(
+                model=MODEL,
+                max_tokens=16000,
+                system=SYSTEM_PROMPT,
+                messages=[{"role": "user", "content": content}],
+                output_format=Analysis,
+            )
+        except ValidationError as error:
+            print("\nthe analysis didn't pass validation:")
+            for problem in error.errors():
+                field = ".".join(str(part) for part in problem["loc"])
+                print(f"  {field}: {problem['msg']}")
+            continue
+        analysis = message.parsed_output
 
-    print()
-    print("Themes:")
-    for theme in analysis.themes:
-        print(f"  - {theme}")
-    print(f"Tone: {analysis.emotional_tone}")
-    print()
-    print(analysis.reflection)
-    print()
-    print(analysis.follow_up_question)
+        print()
+        print("Themes:")
+        for theme in analysis.themes:
+            print(f"  - {theme}")
+        print(f"Tone: {analysis.emotional_tone}")
+        print()
+        print(analysis.reflection)
+        print()
+        print(analysis.follow_up_question)
+
+        counts[question["id"]] += 1
+        question = next_question(questions, counts)
 
 
 if __name__ == "__main__":
