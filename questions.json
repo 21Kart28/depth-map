@@ -1,0 +1,72 @@
+[
+  {
+    "id": "avoidance-01",
+    "category": "avoidance",
+    "text": "What is something you keep telling yourself you'll deal with later? What happens when you imagine dealing with it now?"
+  },
+  {
+    "id": "relationships-01",
+    "category": "relationships",
+    "text": "Think of the last time you held back from saying something to someone close to you. What did you leave unsaid, and what stopped you?"
+  },
+  {
+    "id": "self-talk-01",
+    "category": "self-talk",
+    "text": "When something you made doesn't go well, what are the first words you say to yourself about it?"
+  },
+  {
+    "id": "recurring-patterns-01",
+    "category": "recurring-patterns",
+    "text": "What kind of situation do you keep ending up in, even after telling yourself next time would be different?"
+  },
+  {
+    "id": "desire-01",
+    "category": "desire",
+    "text": "What is something you want that you rarely admit to wanting? What makes it hard to say out loud?"
+  },
+  {
+    "id": "avoidance-02",
+    "category": "avoidance",
+    "text": "Which message, email or call have you left unanswered the longest? What do you expect to happen when you reply?"
+  },
+  {
+    "id": "relationships-02",
+    "category": "relationships",
+    "text": "Who do you act most differently around, compared with how you are on your own? What changes?"
+  },
+  {
+    "id": "self-talk-02",
+    "category": "self-talk",
+    "text": "When someone praises your work, what do you say to yourself right after?"
+  },
+  {
+    "id": "recurring-patterns-02",
+    "category": "recurring-patterns",
+    "text": "What argument have you had more than once, with different people? What part did you play each time?"
+  },
+  {
+    "id": "desire-02",
+    "category": "desire",
+    "text": "If nobody would ever find out how you spent it, what would you do with a free month?"
+  },
+  {
+    "id": "avoidance-03",
+    "category": "avoidance",
+    "text": "What did you last start and then put down as soon as it got uncomfortable? Which part was uncomfortable?"
+  },
+  {
+    "id": "relationships-03",
+    "category": "relationships",
+    "text": "When did you last feel let down by someone and not tell them? What did you do with that feeling?"
+  },
+  {
+    "id": "self-talk-03",
+    "category": "self-talk",
+    "text": "What do you tell yourself on a morning when you have more to do than you can finish?"
+  },
+  {
+    "id": "recurring-patterns-03",
+    "category": "recurring-patterns",
+    "text": "What promise do you make to yourself most often? What usually happens in the week after you make it?"
+  }
+]
