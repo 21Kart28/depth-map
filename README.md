@@ -9,9 +9,9 @@ Needs Python 3.11+ and an Anthropic API key.
 ```bash
 python -m venv .venv
 source .venv/bin/activate             # PowerShell: .venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+pip install -e ".[dev]"
 export ANTHROPIC_API_KEY=your-key     # PowerShell: $env:ANTHROPIC_API_KEY = "your-key"
-python depthmap.py
+python -m depthmap
 ```
 
-It asks one question at a time until you type `q`. The next question is always the one you've answered least in this run, and ties go to whichever comes first in `questions.json`. Pass `--question-id desire-01` (or any other id in that file) to start with a different question.
+It asks one question at a time until you type `q`. The next question is always the one you've answered least in this run, and ties go to whichever comes first in `src/depthmap/data/questions.json`. Pass `--question-id desire-01` (or any other id in that file) to start with a different question.

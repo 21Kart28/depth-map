@@ -1,0 +1,189 @@
+{
+  "version": "v1-placeholder",
+  "note": "Placeholder vocabulary written to unblock the architecture. Every definition must be reviewed by hand before any client use. See docs/PENDING.md.",
+  "rules": [
+    "No diagnostic labels, severities, or disorder names.",
+    "No schema names from the Young Schema Questionnaire.",
+    "No Jungian or depth-psychology terms.",
+    "Plain language a client could read without a glossary.",
+    "A code describes something the client does, thinks, or reports, not what it means."
+  ],
+  "codes": [
+    {
+      "id": "holding-back",
+      "group": "interpersonal",
+      "label": "Holding something back",
+      "definition": "The client wanted to say something to a specific person and did not.",
+      "example": "I wanted to tell her it bothered me and I just said it was fine.",
+      "counter_example": "Deciding not to bring up a topic because it was not the right time, without any sense of having swallowed something."
+    },
+    {
+      "id": "seeking-reassurance",
+      "group": "interpersonal",
+      "label": "Looking for reassurance",
+      "definition": "The client asked, or wanted to ask, someone to confirm they were okay, right, or still liked.",
+      "example": "I texted him three times to check we were good.",
+      "counter_example": "Asking a colleague a practical question about a task."
+    },
+    {
+      "id": "withdrawing-after-conflict",
+      "group": "interpersonal",
+      "label": "Pulling away after friction",
+      "definition": "After a disagreement or awkward moment, the client went quiet, left, or avoided the person.",
+      "example": "After the argument I just stopped answering for a few days.",
+      "counter_example": "Taking an hour to cool down and then coming back to the conversation."
+    },
+    {
+      "id": "anticipating-rejection",
+      "group": "interpersonal",
+      "label": "Expecting to be turned down",
+      "definition": "The client predicted that a specific person would reject, dismiss, or be annoyed by them, before anything happened.",
+      "example": "I already knew she'd think I was being needy, so I didn't ask.",
+      "counter_example": "Recalling an actual rejection that happened."
+    },
+    {
+      "id": "caretaking-at-cost",
+      "group": "interpersonal",
+      "label": "Taking care of others at own expense",
+      "definition": "The client did something for someone else while giving up something they needed, and noticed the cost.",
+      "example": "I drove him to the airport at 5am even though I had my exam that morning.",
+      "counter_example": "Helping someone without any mention of a cost to themselves."
+    },
+    {
+      "id": "wanting-acknowledgment",
+      "group": "interpersonal",
+      "label": "Wanting to be noticed or acknowledged",
+      "definition": "The client wanted someone to recognize something they did or felt, and it did not happen or they did not ask.",
+      "example": "Nobody said anything about the presentation and it sat with me all day.",
+      "counter_example": "Receiving thanks and describing it neutrally."
+    },
+    {
+      "id": "putting-off-task",
+      "group": "avoidance",
+      "label": "Putting off a task",
+      "definition": "The client delayed a specific thing they intended to do and names what they did instead.",
+      "example": "I opened the application tab and closed it again and watched something.",
+      "counter_example": "Rescheduling a task for a stated practical reason."
+    },
+    {
+      "id": "distracting-from-feeling",
+      "group": "avoidance",
+      "label": "Reaching for a distraction",
+      "definition": "The client used an activity, substance, or screen to stop thinking about something specific.",
+      "example": "I scrolled for two hours so I wouldn't think about the call.",
+      "counter_example": "Relaxing with a show after a long day, with no feeling being avoided."
+    },
+    {
+      "id": "avoiding-person",
+      "group": "avoidance",
+      "label": "Avoiding a person",
+      "definition": "The client steered clear of a specific person, place, or message because of what contact might bring up.",
+      "example": "I saw his name on my phone and put it face down.",
+      "counter_example": "Not seeing someone because of schedules."
+    },
+    {
+      "id": "avoiding-decision",
+      "group": "avoidance",
+      "label": "Sitting on a decision",
+      "definition": "The client left a choice open past the point where they say it needed to be made.",
+      "example": "I still haven't told them whether I'm coming and the deadline was Friday.",
+      "counter_example": "Taking time to decide something that has no deadline."
+    },
+    {
+      "id": "replaying-conversation",
+      "group": "repetitive-thinking",
+      "label": "Replaying a conversation",
+      "definition": "The client went over something that was said, repeatedly, after it ended.",
+      "example": "I kept hearing the way she said 'fine' all evening.",
+      "counter_example": "Remembering a conversation once to report it."
+    },
+    {
+      "id": "rehearsing-failure",
+      "group": "repetitive-thinking",
+      "label": "Rehearsing a bad outcome",
+      "definition": "The client imagined, more than once, a future event going wrong.",
+      "example": "I've already pictured the interviewer's face when I blank.",
+      "counter_example": "Planning for a realistic risk with a concrete step."
+    },
+    {
+      "id": "self-criticism-after-mistake",
+      "group": "repetitive-thinking",
+      "label": "Hard on self after a mistake",
+      "definition": "After an error, the client reports a sentence or thought directed at themselves that is harsher than the mistake.",
+      "example": "I sent the wrong file and the first thing I thought was 'of course you did.'",
+      "counter_example": "Noting a mistake and what to do differently."
+    },
+    {
+      "id": "friendships",
+      "group": "functioning",
+      "label": "Friendships",
+      "definition": "The entry reports a concrete event in a friendship this week.",
+      "example": "We finally got dinner after a month of cancelling.",
+      "counter_example": "A general statement about friends with no event."
+    },
+    {
+      "id": "work-or-school",
+      "group": "functioning",
+      "label": "Work or school",
+      "definition": "The entry reports a concrete event at work or school this week.",
+      "example": "I got the feedback on the draft and it was better than I expected.",
+      "counter_example": "A general statement about being busy."
+    },
+    {
+      "id": "routine-and-sleep",
+      "group": "functioning",
+      "label": "Routine and sleep",
+      "definition": "The entry reports a concrete change in sleep, meals, or daily structure.",
+      "example": "I've been up past three every night this week.",
+      "counter_example": "Mentioning being tired without a pattern."
+    },
+    {
+      "id": "activity-dropped-or-resumed",
+      "group": "functioning",
+      "label": "Something dropped or picked back up",
+      "definition": "The client stopped doing, or returned to, an activity they value.",
+      "example": "I went back to the climbing gym for the first time since September.",
+      "counter_example": "Trying a new activity once."
+    },
+    {
+      "id": "wanting-change",
+      "group": "change",
+      "label": "Wanting something different",
+      "definition": "The client states a specific way they want things to be different.",
+      "example": "I want to stop being the one who always texts first.",
+      "counter_example": "A vague wish for things to be better."
+    },
+    {
+      "id": "reasons-to-stay",
+      "group": "change",
+      "label": "Reasons to keep things as they are",
+      "definition": "The client names what makes the current situation worth keeping, or the change not worth it.",
+      "example": "If I stop texting first, I'm scared we just stop talking.",
+      "counter_example": "Listing reasons against a change the client never wanted."
+    },
+    {
+      "id": "went-well",
+      "group": "positive",
+      "label": "Something went well",
+      "definition": "The client reports a specific thing that went well this week.",
+      "example": "I asked the question in lecture and it was fine.",
+      "counter_example": "A generic 'the week was okay.'"
+    },
+    {
+      "id": "own-contribution",
+      "group": "positive",
+      "label": "Something the client did that helped",
+      "definition": "The client names an action of their own that contributed to something going well.",
+      "example": "I prepped the night before, which is why the morning wasn't a scramble.",
+      "counter_example": "Attributing a good outcome entirely to luck or others."
+    },
+    {
+      "id": "naming-a-need",
+      "group": "interpersonal",
+      "label": "Naming a need out loud",
+      "definition": "The client told someone what they wanted or needed directly.",
+      "example": "I told my roommate I need the kitchen quiet before 9.",
+      "counter_example": "Hinting or hoping someone would notice."
+    }
+  ]
+}

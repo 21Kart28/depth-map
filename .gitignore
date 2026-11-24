@@ -3,3 +3,6 @@
 __pycache__/
 Learning info/
 depthmap-research/
+notes/
+.pytest_cache/
+.ruff_cache/

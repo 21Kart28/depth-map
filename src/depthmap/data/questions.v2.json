@@ -1,0 +1,213 @@
+{
+  "version": "v2-placeholder",
+  "note": "Placeholder bank written to unblock the architecture. Every question must be re-checked by hand against plan v2 sections 3.1 and 3.2 before client use. See docs/PENDING.md.",
+  "questions": [
+    {
+      "id": "rel-ep-01",
+      "domain": "relationship-episode",
+      "mode": "disclosure",
+      "framing": "A week usually comes down to one or two moments with other people.",
+      "question": "Think of one recent interaction that stuck with you. What did you want from the other person, how did they respond, and what did you do next?",
+      "clinician_gated": false,
+      "schema_hooks": ["relational_episode"]
+    },
+    {
+      "id": "rel-ep-02",
+      "domain": "relationship-episode",
+      "mode": "disclosure",
+      "framing": "Being let down is specific; it happens at a moment, with a person.",
+      "question": "Think of the last time someone close let you down. What had you wanted from them, what did they do, and what did you do after?",
+      "clinician_gated": false,
+      "schema_hooks": ["relational_episode"]
+    },
+    {
+      "id": "rel-ep-03",
+      "domain": "relationship-episode",
+      "mode": "concrete",
+      "framing": "Most people say less than they mean at least once a day.",
+      "question": "Think of one recent moment you held something back with someone. What did you want to say, and what did you say instead?",
+      "clinician_gated": false,
+      "schema_hooks": ["relational_episode"]
+    },
+    {
+      "id": "rel-ep-04",
+      "domain": "relationship-episode",
+      "mode": "concrete",
+      "framing": "Wanting something from someone and not asking is common enough to have a shape.",
+      "question": "Think of a recent time you wanted something from someone close to you and did not ask. What was it, and what did you do instead?",
+      "clinician_gated": false,
+      "schema_hooks": ["relational_episode"]
+    },
+    {
+      "id": "rel-ep-05",
+      "domain": "relationship-episode",
+      "mode": "concrete",
+      "framing": "A conversation you keep not having is still a conversation you're having with yourself.",
+      "question": "Think of a conversation you have been putting off. What do you expect the other person to say, and what would you do right after they said it?",
+      "clinician_gated": false,
+      "schema_hooks": ["relational_episode"]
+    },
+    {
+      "id": "thought-01",
+      "domain": "situated-thought",
+      "mode": "concrete",
+      "framing": "The first sentence after a mistake is usually the one worth looking at.",
+      "question": "Think of a mistake from this week. What was the first sentence that went through your head, and what did you do in the next few minutes?",
+      "clinician_gated": false,
+      "schema_hooks": ["themes"]
+    },
+    {
+      "id": "thought-02",
+      "domain": "situated-thought",
+      "mode": "concrete",
+      "framing": "Talking yourself out of something takes an argument, and arguments have claims.",
+      "question": "Think of a recent moment when you talked yourself out of doing something. What exactly did you tell yourself, and how did you know it was true?",
+      "clinician_gated": false,
+      "schema_hooks": ["themes"]
+    },
+    {
+      "id": "thought-03",
+      "domain": "situated-thought",
+      "mode": "concrete",
+      "framing": "Some comments land harder than their size.",
+      "question": "Think of the most recent time a comment got under your skin. What was said, and what did you do in the minutes after?",
+      "clinician_gated": false,
+      "schema_hooks": ["themes"]
+    },
+    {
+      "id": "thought-04",
+      "domain": "situated-thought",
+      "mode": "disclosure",
+      "framing": "Some of what we say to ourselves we would never say to anyone else.",
+      "question": "Think of one moment this week when you were hard on yourself. What was the exact wording in your head, and what had just happened?",
+      "clinician_gated": true,
+      "schema_hooks": ["themes"]
+    },
+    {
+      "id": "avoid-01",
+      "domain": "avoidance",
+      "mode": "concrete",
+      "framing": "The moment of putting something off is short and easy to miss.",
+      "question": "Pick one thing you put off this week. At the moment you would have started it, what did you do instead?",
+      "clinician_gated": false,
+      "schema_hooks": ["themes"]
+    },
+    {
+      "id": "avoid-02",
+      "domain": "avoidance",
+      "mode": "concrete",
+      "framing": "Everyone has something they reach for when a thought gets loud.",
+      "question": "What do you reach for when you want to stop thinking about something, and what were you thinking about the last time you reached for it?",
+      "clinician_gated": false,
+      "schema_hooks": ["themes"]
+    },
+    {
+      "id": "avoid-03",
+      "domain": "avoidance",
+      "mode": "concrete",
+      "framing": "A decision left open takes up room.",
+      "question": "Is there a choice you have been leaving open past when it needed making? What happened the last time you sat down to decide it?",
+      "clinician_gated": false,
+      "schema_hooks": ["themes"]
+    },
+    {
+      "id": "func-01",
+      "domain": "functioning",
+      "mode": "concrete",
+      "framing": "Ordinary weeks have ordinary events in them, and those count.",
+      "question": "How did things go with friends this week? Give one example.",
+      "clinician_gated": false,
+      "schema_hooks": ["themes"]
+    },
+    {
+      "id": "func-02",
+      "domain": "functioning",
+      "mode": "concrete",
+      "framing": "Work and school take most of the week, so they get a question.",
+      "question": "How did things go at work or school this week? Give one specific moment.",
+      "clinician_gated": false,
+      "schema_hooks": ["themes"]
+    },
+    {
+      "id": "func-03",
+      "domain": "functioning",
+      "mode": "concrete",
+      "framing": "Sleep and routine shift before anything else does.",
+      "question": "What did your sleep and your mornings look like this week compared with last? Give one night or one morning.",
+      "clinician_gated": false,
+      "schema_hooks": ["themes"]
+    },
+    {
+      "id": "func-04",
+      "domain": "functioning",
+      "mode": "concrete",
+      "framing": "Things we stop doing rarely announce themselves.",
+      "question": "Is there something you used to do regularly that you have not done lately? When was the last time, and what was going on that day?",
+      "clinician_gated": false,
+      "schema_hooks": ["themes"]
+    },
+    {
+      "id": "emotion-01",
+      "domain": "emotion-in-context",
+      "mode": "concrete",
+      "framing": "Your word for a feeling is better than anyone else's.",
+      "question": "Pick one moment from this week that had a strong feeling in it. What is one word you would use for it, and what made it that word and not another?",
+      "clinician_gated": false,
+      "schema_hooks": ["client_emotion"]
+    },
+    {
+      "id": "emotion-02",
+      "domain": "emotion-in-context",
+      "mode": "concrete",
+      "framing": "Feelings show up in the body before they get a name.",
+      "question": "Think of a moment this week when you noticed something in your body before you knew what you felt. Where was it, and what was happening around you?",
+      "clinician_gated": false,
+      "schema_hooks": ["client_emotion"]
+    },
+    {
+      "id": "change-01",
+      "domain": "change-sustain",
+      "mode": "disclosure",
+      "framing": "Wanting something different and wanting things to stay the same usually sit side by side.",
+      "question": "What, if anything, makes you want things to be different here, and what makes you want to leave them as they are?",
+      "clinician_gated": false,
+      "schema_hooks": ["change_talk", "sustain_talk"]
+    },
+    {
+      "id": "change-02",
+      "domain": "change-sustain",
+      "mode": "disclosure",
+      "framing": "Some wants stay unsaid for a long time.",
+      "question": "What is something you want that you have not said out loud, and what do you picture happening if you said it to one specific person?",
+      "clinician_gated": false,
+      "schema_hooks": ["change_talk"]
+    },
+    {
+      "id": "well-01",
+      "domain": "went-well",
+      "mode": "positive",
+      "framing": "Things that go well have causes too.",
+      "question": "What is one thing that went well this week, and what did you do that helped it go that way?",
+      "clinician_gated": false,
+      "schema_hooks": ["themes"]
+    },
+    {
+      "id": "well-02",
+      "domain": "went-well",
+      "mode": "positive",
+      "framing": "Small moments count here.",
+      "question": "When did you feel most like yourself this week? What were you doing, and who was there?",
+      "clinician_gated": false,
+      "schema_hooks": ["themes"]
+    },
+    {
+      "id": "well-03",
+      "domain": "went-well",
+      "mode": "positive",
+      "framing": "Asking for something and getting it is worth writing down.",
+      "question": "Was there a moment this week when you said what you needed and it worked out? What did you say, and what happened?",
+      "clinician_gated": false,
+      "schema_hooks": ["themes"]
+    }
+  ]
+}

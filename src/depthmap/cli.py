@@ -1,14 +1,12 @@
 import argparse
-import json
-from pathlib import Path
-from typing import Annotated
 
 from anthropic import Anthropic
-from pydantic import BaseModel, Field, StringConstraints, ValidationError, field_validator
+from pydantic import ValidationError
+
+from depthmap.models import Analysis
+from depthmap.questions import load_bank
 
 MODEL = "claude-haiku-5-5"
-
-QUESTIONS_PATH = Path(__file__).with_name("questions.json")
 
 SYSTEM_PROMPT = """\
 You are a careful, non-clinical listener. The user has answered a reflective question.
@@ -24,43 +22,15 @@ Ask one thing in the follow-up question, not two joined by "and".
 No diagnosis, no advice, no platitudes, no psychology jargon."""
 
 
-Theme = Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=60)]
-
-
-class Analysis(BaseModel):
-    # the API only enforces the field names and types; these limits reach the model as hints
-    # and are checked here when the reply comes back
-    themes: list[Theme] = Field(min_length=1, max_length=5)
-    emotional_tone: str = Field(min_length=2, max_length=60)
-    reflection: str = Field(min_length=40, max_length=1200)
-    follow_up_question: str = Field(min_length=10, max_length=300)
-
-    @field_validator("follow_up_question")
-    @classmethod
-    def ends_with_question_mark(cls, value: str) -> str:
-        if not value.rstrip().endswith("?"):
-            raise ValueError("must end with a question mark")
-        return value
-
-
-def next_question(questions, counts):
-    # min() returns the first of several equal items, so ties go in file order
-    return min(questions, key=lambda q: counts[q["id"]])
-
-
 def main():
-    questions = json.loads(QUESTIONS_PATH.read_text(encoding="utf-8"))
-    by_id = {q["id"]: q for q in questions}
+    bank = load_bank()
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--question-id", choices=list(by_id))
+    parser = argparse.ArgumentParser(prog="depthmap")
+    parser.add_argument("--question-id", choices=[q.id for q in bank.questions])
     args = parser.parse_args()
 
-    counts = {q["id"]: 0 for q in questions}
-    if args.question_id:
-        question = by_id[args.question_id]
-    else:
-        question = next_question(questions, counts)
+    counts = {q.id: 0 for q in bank.questions}
+    question = bank.get(args.question_id) if args.question_id else bank.next(counts)
 
     # reads ANTHROPIC_API_KEY from the environment
     client = Anthropic()
@@ -68,12 +38,12 @@ def main():
     print("Type q to quit.")
     while True:
         print()
-        print(question["text"])
+        print(question.text)
         response = input("> ")
         if response.strip().lower() == "q":
             break
 
-        content = f"Question: {question['text']}\n\nAnswer: {response}"
+        content = f"Question: {question.text}\n\nAnswer: {response}"
         try:
             message = client.messages.parse(
                 model=MODEL,
@@ -100,9 +70,5 @@ def main():
         print()
         print(analysis.follow_up_question)
 
-        counts[question["id"]] += 1
-        question = next_question(questions, counts)
-
-
-if __name__ == "__main__":
-    main()
+        counts[question.id] += 1
+        question = bank.next(counts)
