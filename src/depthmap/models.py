@@ -1,6 +1,10 @@
+from datetime import UTC, datetime
 from typing import Annotated
+from uuid import uuid4
 
 from pydantic import BaseModel, Field, StringConstraints, field_validator
+
+DEFAULT_CLIENT_ID = "local"
 
 Theme = Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=60)]
 
@@ -29,3 +33,18 @@ class Analysis(BaseModel):
         if not value.rstrip().endswith("?"):
             raise ValueError("must end with a question mark")
         return value
+
+
+class Entry(BaseModel):
+    """One answer to one question, stored with its analysis."""
+
+    id: str = Field(default_factory=lambda: uuid4().hex)
+    # every entry carries a client id from the start so retrieval can be scoped per client later
+    client_id: str = DEFAULT_CLIENT_ID
+    question_id: str
+    question_text: str
+    response: str
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    analysis: Analysis
+    prompt_version: str
+    provider: str

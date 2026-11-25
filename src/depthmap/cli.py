@@ -3,8 +3,11 @@ import logging
 
 from depthmap.analysis import AnalysisParseError, analyze
 from depthmap.config import Settings
+from depthmap.models import DEFAULT_CLIENT_ID, Entry
+from depthmap.prompts.analysis import ANALYSIS_PROMPT_VERSION
 from depthmap.providers import ProviderError, get_provider
 from depthmap.questions import load_bank
+from depthmap.store import InMemoryRepository
 
 
 def main():
@@ -18,8 +21,8 @@ def main():
     logging.basicConfig(level=settings.log_level)
     provider = get_provider(settings)
 
-    counts = {q.id: 0 for q in bank.questions}
-    question = bank.get(args.question_id) if args.question_id else bank.next(counts)
+    repo = InMemoryRepository()
+    question = bank.get(args.question_id) if args.question_id else bank.next({})
 
     print(f"Provider: {provider.name}")
     print("Type q to quit.")
@@ -51,5 +54,14 @@ def main():
         print()
         print(analysis.follow_up_question)
 
-        counts[question.id] += 1
-        question = bank.next(counts)
+        repo.add(
+            Entry(
+                question_id=question.id,
+                question_text=question.text,
+                response=response,
+                analysis=analysis,
+                prompt_version=ANALYSIS_PROMPT_VERSION,
+                provider=provider.name,
+            )
+        )
+        question = bank.next(repo.count_by_question(DEFAULT_CLIENT_ID))

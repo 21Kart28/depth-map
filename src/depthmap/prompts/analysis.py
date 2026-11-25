@@ -1,4 +1,6 @@
-"""The system prompt for the analysis call."""
+"""The system prompt for the analysis call and its version, stored on every entry."""
+
+ANALYSIS_PROMPT_VERSION = "v1"
 
 SYSTEM_PROMPT = """\
 You are a careful, non-clinical listener. The user has answered a reflective question.
