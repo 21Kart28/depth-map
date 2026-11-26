@@ -48,3 +48,27 @@ class Entry(BaseModel):
     analysis: Analysis
     prompt_version: str
     provider: str
+
+
+class CreateEntryRequest(BaseModel):
+    """Body of POST /entries."""
+
+    question_id: str
+    response: Annotated[
+        str, StringConstraints(strip_whitespace=True, min_length=1, max_length=5000)
+    ]
+
+
+class HealthResponse(BaseModel):
+    """Body of GET /health."""
+
+    status: str
+    version: str
+    provider: str
+
+
+class ErrorResponse(BaseModel):
+    """Body of every error reply."""
+
+    error: str
+    detail: str

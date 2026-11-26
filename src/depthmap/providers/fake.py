@@ -24,7 +24,7 @@ class FakeProvider:
             return self.raw
 
         answer = user.rsplit("Answer:", 1)[-1].strip()
-        words = re.findall(r"[a-z']{4,}", answer.lower())
+        words = re.findall(r"[a-z']{4,60}", answer.lower())
         # dict.fromkeys drops repeats and keeps the order the words were written in
         themes = list(dict.fromkeys(words))[:3] or ["no answer"]
         return json.dumps(

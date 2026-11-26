@@ -17,3 +17,11 @@ python -m depthmap
 It asks one question at a time until you type `q`. The next question is always the one you've answered least in this run, and ties go to whichever comes first in `src/depthmap/data/questions.json`. Pass `--question-id desire-01` (or any other id in that file) to start with a different question.
 
 The key can also go in a `.env` file at the repo root. Without a key, or with `DEPTHMAP_PROVIDER=fake`, it runs offline on a fake provider that builds its reply from your answer; the first line it prints says which provider is active. `DEPTHMAP_MODEL` picks the model.
+
+The same loop is available over HTTP:
+
+```bash
+uvicorn depthmap.api:app
+```
+
+`GET /questions/next` returns the next question, `POST /entries` takes `{"question_id": "...", "response": "..."}` and returns the stored entry with its analysis, and `GET /entries` lists entries newest first. The interactive docs are at `http://127.0.0.1:8000/docs`. Entries live in memory and are gone when the server stops.
