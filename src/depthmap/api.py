@@ -10,6 +10,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from depthmap import __version__
 from depthmap.analysis import AnalysisParseError, analyze
 from depthmap.config import Settings
+from depthmap.docs import add_docs_page
 from depthmap.models import (
     DEFAULT_CLIENT_ID,
     CreateEntryRequest,
@@ -53,7 +54,10 @@ def create_app(
         repo = InMemoryRepository()
     bank = load_bank()
 
-    app = FastAPI(title="Depth Map API", version=__version__, description=DESCRIPTION)
+    app = FastAPI(
+        title="Depth Map API", version=__version__, description=DESCRIPTION, docs_url=None
+    )
+    add_docs_page(app)
 
     @app.exception_handler(StarletteHTTPException)
     async def http_error(request: Request, error: StarletteHTTPException):
