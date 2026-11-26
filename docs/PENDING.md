@@ -1,17 +1,17 @@
 # Pending: what must change before Depth Map is used with a real client
 
-This file lives in the repo at `docs/PENDING.md`. It is the debt list. Every placeholder, shortcut, and deferred requirement goes here with a phase and a status. Update it in the same commit that adds or clears an item. Nothing on this list blocks the architecture build; everything on it blocks deployment.
+This is the debt list. Every placeholder, shortcut, and deferred requirement goes here with a priority and a status. Update it in the same commit that adds or clears an item.
 
 Status values: `open`, `in progress`, `done`. Priority: P0 blocks any real-client use; P1 blocks a clinician pilot; P2 blocks a public claim.
 
-## Content placeholders (written fast to unblock the build; rewrite by hand)
+## Content placeholders (first drafts; rewrite before use)
 
 | Item | Where | Priority | Status | Notes |
 | --- | --- | --- | --- | --- |
-| Codebook v1 definitions reviewed line by line | `src/depthmap/data/codebook.json` | P1 | open | Drafted as placeholder. Each code needs a hand-written definition, example, counter-example, and a check against the no-diagnosis, no-Jung rule. Ideally reviewed by one clinician. |
+| Codebook v1 definitions reviewed line by line | `src/depthmap/data/codebook.json` | P1 | open | Drafted as placeholder. Each code needs a final definition, example, counter-example, and a check against the no-diagnosis, no-Jung rule. Ideally reviewed by one clinician. |
 | Question bank v2 reviewed against the property list | `src/depthmap/data/questions.json` | P1 | open | Drafted as placeholder. Each question checked against plan v2 section 3.1 and 3.2. No question ships to a client without passing. |
-| Framing sentences rewritten in a human voice | `questions.json` | P2 | open | Placeholders are serviceable, not good. |
-| Prompt v2 rewritten by the owner | `src/depthmap/prompts/analysis.py` | P1 | open | Current prompt is a first draft. The real prompt is owner-written and iterated against real model output. |
+| Framing sentences rewritten | `questions.json` | P2 | open | Placeholders are serviceable, not good. |
+| Prompt v2 rewritten against real model output | `src/depthmap/prompts/analysis.py` | P1 | open | Current prompt is a first draft. |
 | Safe-template text for risk responses | `src/depthmap/safety/templates.py` | P0 | open | Must follow #chatsafe guidance and name real, locale-correct crisis resources. Placeholder text is a stub. |
 | Risk lexicon sourced from a published list | `src/depthmap/safety/lexicon.json` | P0 | open | Placeholder keywords are from memory. Replace with a cited lexicon and validate on an external annotated set. |
 | Client-facing copy (labels, review-latency line, consent text) | client view | P0 | open | Must use the permitted-language list in `04_safety_and_regulatory.md` section 5. |
