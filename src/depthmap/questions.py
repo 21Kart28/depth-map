@@ -2,7 +2,7 @@ import json
 from collections import Counter
 from importlib import resources
 
-from depthmap.models import Question, QuestionV2
+from depthmap.models import Analysis, Question, QuestionV2
 
 DOMAINS = {
     "relationship-episode",
@@ -14,16 +14,6 @@ DOMAINS = {
     "went-well",
 }
 MODES = {"disclosure", "concrete", "positive"}
-# the analysis fields a question can point at; the v2 analysis model is not written yet
-SCHEMA_HOOKS = {
-    "themes",
-    "candidate_themes",
-    "client_emotion",
-    "tone",
-    "relational_episode",
-    "change_talk",
-    "sustain_talk",
-}
 
 
 class QuestionBank:
@@ -78,7 +68,7 @@ def parse_questions_v2(data: dict) -> list[QuestionV2]:
         if item.get("mode") not in MODES:
             raise ValueError(f"question {question_id}: unknown mode {item.get('mode')!r}")
         for hook in item["schema_hooks"]:
-            if hook not in SCHEMA_HOOKS:
+            if hook not in Analysis.model_fields:
                 raise ValueError(f"question {question_id}: unknown schema hook {hook!r}")
         questions.append(
             QuestionV2(

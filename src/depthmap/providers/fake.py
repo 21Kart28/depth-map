@@ -3,6 +3,7 @@ import re
 
 from pydantic import BaseModel
 
+from depthmap.codebook import load_codebook
 from depthmap.providers.base import ProviderError
 
 
@@ -15,6 +16,7 @@ class FakeProvider:
         self.fail = fail
         self.raw = raw
         self.calls = 0
+        self._code_ids = load_codebook().active_ids()
 
     def complete_json(self, system: str, user: str, schema: type[BaseModel]) -> str:
         self.calls += 1
@@ -24,13 +26,20 @@ class FakeProvider:
             return self.raw
 
         answer = user.rsplit("Answer:", 1)[-1].strip()
-        words = re.findall(r"[a-z']{4,60}", answer.lower())
-        # dict.fromkeys drops repeats and keeps the order the words were written in
-        themes = list(dict.fromkeys(words))[:3] or ["no answer"]
+        words = set(re.findall(r"[a-z']{4,}", answer.lower()))
+        # a code is picked when one of the longer words in its id is in the answer
+        themes = [code_id for code_id in self._code_ids if words & set(code_id.split("-"))][:4]
+        if not themes:
+            themes = [self._code_ids[len(answer) % len(self._code_ids)]]
         return json.dumps(
             {
                 "themes": themes,
-                "emotional_tone": "neutral",
+                "candidate_themes": [],
+                "theme_confidence": [{"theme": theme, "confidence": "low"} for theme in themes],
+                "tone": {"valence": 0.0, "arousal": 0.0, "labels": ["neutral"]},
+                "relational_episode": None,
+                "change_talk": None,
+                "sustain_talk": None,
                 "reflection": f'You wrote: "{answer[:300]}". This reply stays with those words.',
                 "follow_up_question": "What happened right after that?",
             }

@@ -9,6 +9,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from depthmap import __version__
 from depthmap.analysis import AnalysisParseError, analyze
+from depthmap.codebook import load_codebook
 from depthmap.config import Settings
 from depthmap.docs import add_docs_page
 from depthmap.models import (
@@ -20,7 +21,6 @@ from depthmap.models import (
     Question,
     QuestionV2,
 )
-from depthmap.prompts.analysis import ANALYSIS_PROMPT_VERSION
 from depthmap.providers import LLMProvider, ProviderError, get_provider
 from depthmap.questions import load_bank
 from depthmap.store import Repository, get_repository
@@ -29,8 +29,8 @@ logger = logging.getLogger(__name__)
 
 DESCRIPTION = (
     "Depth Map asks one reflective question at a time and stores each answer with an analysis "
-    "of it: themes, tone, a short reflection and a follow-up question. Entries are kept in "
-    "a SQLite file."
+    "of it: themes picked from a fixed codebook, tone, a short reflection and a follow-up "
+    "question. Entries are kept in a SQLite file."
 )
 
 NOT_FOUND = {404: {"model": ErrorResponse}}
@@ -54,6 +54,7 @@ def create_app(
     if repo is None:
         repo = get_repository(settings)
     bank = load_bank(settings.question_bank)
+    codebook = load_codebook()
 
     app = FastAPI(
         title="Depth Map API", version=__version__, description=DESCRIPTION, docs_url=None
@@ -112,15 +113,17 @@ def create_app(
         if question is None:
             raise HTTPException(404, "question not found")
 
-        analysis = analyze(question.text, body.response, provider)
+        analysis = analyze(question.text, body.response, provider, codebook, body.client_emotion)
         # nothing is stored unless the analysis succeeded
         entry = repo.add(
             Entry(
+                client_id=body.client_id,
                 question_id=question.id,
                 question_text=question.text,
                 response=body.response,
                 analysis=analysis,
-                prompt_version=ANALYSIS_PROMPT_VERSION,
+                prompt_version=analysis.prompt_version,
+                codebook_version=analysis.codebook_version,
                 provider=provider.name,
             )
         )

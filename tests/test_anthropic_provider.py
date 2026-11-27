@@ -5,7 +5,7 @@ import httpx2
 import pytest
 from anthropic.types import TextBlock, ThinkingBlock
 
-from depthmap.models import Analysis
+from depthmap.models import AnalysisOutput
 from depthmap.providers import AnthropicProvider, ProviderError
 
 
@@ -30,7 +30,9 @@ def make_provider(content=None, error=None):
 
 def test_request_shape_and_returned_text():
     provider, messages = make_provider([TextBlock(type="text", text='{"a": 1}')])
-    assert provider.complete_json("the system prompt", "the user text", Analysis) == '{"a": 1}'
+    assert (
+        provider.complete_json("the system prompt", "the user text", AnalysisOutput) == '{"a": 1}'
+    )
 
     request = messages.request
     assert request["model"] == "test-model"
@@ -44,18 +46,18 @@ def test_request_shape_and_returned_text():
 def test_text_is_found_after_a_thinking_block():
     thinking = ThinkingBlock(type="thinking", thinking="", signature="sig")
     provider, _ = make_provider([thinking, TextBlock(type="text", text="{}")])
-    assert provider.complete_json("s", "u", Analysis) == "{}"
+    assert provider.complete_json("s", "u", AnalysisOutput) == "{}"
 
 
 def test_empty_content_raises():
     provider, _ = make_provider([])
     with pytest.raises(ProviderError):
-        provider.complete_json("s", "u", Analysis)
+        provider.complete_json("s", "u", AnalysisOutput)
 
 
 def test_connection_error_is_wrapped():
     request = httpx2.Request("POST", "https://api.anthropic.com/v1/messages")
     provider, _ = make_provider(error=anthropic.APIConnectionError(request=request))
     with pytest.raises(ProviderError) as raised:
-        provider.complete_json("s", "u", Analysis)
+        provider.complete_json("s", "u", AnalysisOutput)
     assert isinstance(raised.value.__cause__, anthropic.APIConnectionError)

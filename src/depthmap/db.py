@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS entries (
     response TEXT NOT NULL,
     created_at TEXT NOT NULL,
     prompt_version TEXT NOT NULL,
+    codebook_version TEXT NOT NULL,
     provider TEXT NOT NULL,
     embedding BLOB
 );

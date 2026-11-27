@@ -2,9 +2,9 @@ import argparse
 import logging
 
 from depthmap.analysis import AnalysisParseError, analyze
+from depthmap.codebook import load_codebook
 from depthmap.config import Settings
 from depthmap.models import DEFAULT_CLIENT_ID, Entry, QuestionV2
-from depthmap.prompts.analysis import ANALYSIS_PROMPT_VERSION
 from depthmap.providers import ProviderError, get_provider
 from depthmap.questions import load_bank
 from depthmap.store import get_repository
@@ -13,6 +13,7 @@ from depthmap.store import get_repository
 def main():
     settings = Settings()
     bank = load_bank(settings.question_bank)
+    codebook = load_codebook()
 
     parser = argparse.ArgumentParser(prog="depthmap")
     parser.add_argument("--question-id", choices=[q.id for q in bank.questions])
@@ -38,7 +39,7 @@ def main():
             break
 
         try:
-            analysis = analyze(question.text, response, provider)
+            analysis = analyze(question.text, response, provider, codebook)
         except AnalysisParseError as error:
             print("\nthe analysis didn't pass validation:")
             for problem in error.problems:
@@ -51,8 +52,8 @@ def main():
         print()
         print("Themes:")
         for theme in analysis.themes:
-            print(f"  - {theme}")
-        print(f"Tone: {analysis.emotional_tone}")
+            print(f"  - {theme}: {codebook.get(theme).label}")
+        print(f"Tone: {', '.join(analysis.tone.labels)}")
         print()
         print(analysis.reflection)
         print()
@@ -64,7 +65,8 @@ def main():
                 question_text=question.text,
                 response=response,
                 analysis=analysis,
-                prompt_version=ANALYSIS_PROMPT_VERSION,
+                prompt_version=analysis.prompt_version,
+                codebook_version=analysis.codebook_version,
                 provider=provider.name,
             )
         )

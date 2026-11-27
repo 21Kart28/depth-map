@@ -6,7 +6,7 @@ from depthmap.models import Analysis, Entry
 
 SELECT_ENTRY = """
 SELECT e.id, e.client_id, e.question_id, e.question_text, e.response, e.created_at,
-       e.prompt_version, e.provider, a.payload
+       e.prompt_version, e.codebook_version, e.provider, a.payload
 FROM entries e JOIN analyses a ON a.entry_id = e.id
 """
 
@@ -27,7 +27,8 @@ class SQLiteRepository:
         with closing(connect(self.path)) as db, db:
             db.execute(
                 "INSERT INTO entries (id, client_id, question_id, question_text, response,"
-                " created_at, prompt_version, provider) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                " created_at, prompt_version, codebook_version, provider)"
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 (
                     entry.id,
                     entry.client_id,
@@ -37,6 +38,7 @@ class SQLiteRepository:
                     # one fixed format in UTC, so sorting the text sorts by time
                     entry.created_at.astimezone(UTC).isoformat(timespec="microseconds"),
                     entry.prompt_version,
+                    entry.codebook_version,
                     entry.provider,
                 ),
             )

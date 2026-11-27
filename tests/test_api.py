@@ -1,4 +1,5 @@
 from depthmap import __version__
+from depthmap.codebook import load_codebook
 from depthmap.providers import FakeProvider
 
 ANSWER = "I kept avoiding the call with my landlord about the lease."
@@ -70,9 +71,27 @@ def test_post_then_get_round_trip(client):
     assert entry["question_id"] == "avoid-01"
     assert entry["client_id"] == "local"
     assert entry["provider"] == "fake"
-    assert entry["prompt_version"] == "v1"
-    assert entry["analysis"]["themes"] == ["kept", "avoiding", "call"]
+    assert entry["prompt_version"] == "v2"
+    assert entry["codebook_version"] == load_codebook().version
+    assert set(entry["analysis"]["themes"]) <= set(load_codebook().active_ids())
+    assert entry["analysis"]["client_emotion"] is None
     assert client.get(f"/entries/{entry['id']}").json() == entry
+
+
+def test_client_emotion_and_client_id_are_stored(client):
+    body = {
+        "question_id": "rel-ep-01",
+        "response": ANSWER,
+        "client_emotion": "cornered",
+        "client_id": "someone-else",
+    }
+    entry = client.post("/entries", json=body).json()
+    assert entry["analysis"]["client_emotion"] == "cornered"
+    assert entry["client_id"] == "someone-else"
+    assert client.get(f"/entries/{entry['id']}").json() == entry
+    assert client.get("/questions/next").json()["id"] == "rel-ep-01"
+    other = client.get("/questions/next", params={"client_id": "someone-else"}).json()
+    assert other["id"] != "rel-ep-01"
 
 
 def test_unknown_entry_is_404(client):

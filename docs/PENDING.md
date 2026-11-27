@@ -11,7 +11,7 @@ Status values: `open`, `in progress`, `done`. Priority: P0 blocks any real-clien
 | Codebook v1 definitions reviewed line by line | `src/depthmap/data/codebook.json` | P1 | open | Drafted as placeholder. Each code needs a final definition, example, counter-example, and a check against the no-diagnosis, no-Jung rule. Ideally reviewed by one clinician. |
 | Question bank v2 reviewed against the property list | `src/depthmap/data/questions.v2.json` | P1 | open | Drafted as placeholder. Each question checked against plan v2 section 3.1 and 3.2. No question ships to a client without passing. |
 | Framing sentences rewritten | `questions.v2.json` | P2 | open | Placeholders are serviceable, not good. |
-| Prompt v2 rewritten against real model output | `src/depthmap/prompts/analysis.py` | P1 | open | Current prompt is a first draft. |
+| Prompt v2 rewritten against real model output | `src/depthmap/prompts/analysis.py` | P1 | open | Current prompt is a first draft that has never run against the real model. |
 | Safe-template text for risk responses | `src/depthmap/safety/templates.py` | P0 | open | Must follow #chatsafe guidance and name real, locale-correct crisis resources. Placeholder text is a stub. |
 | Risk lexicon sourced from a published list | `src/depthmap/safety/lexicon.json` | P0 | open | Placeholder keywords are from memory. Replace with a cited lexicon and validate on an external annotated set. |
 | Client-facing copy (labels, review-latency line, consent text) | client view | P0 | open | Must use the permitted-language list in `04_safety_and_regulatory.md` section 5. |
@@ -68,4 +68,7 @@ Status values: `open`, `in progress`, `done`. Priority: P0 blocks any real-clien
 | Single-client assumption throughout | P1 | in progress | Every entry has a `client_id` (default `local`) and the question history behind `GET /questions/next` is scoped by it. Nothing sets another id yet; keep the retrieval index isolated per client when it is built. |
 | Classifier risk stage is optional; rule-based stage is the only guaranteed path | P1 | open | |
 | `questions` table is created but nothing fills it | P2 | open | The bank is still read from JSON and each entry keeps its own copy of the question text. Fill the table when questions can be turned on and off per client. |
-| No migration tool; tables are created if missing | P2 | open | A change to a column means deleting `depthmap.db` by hand. |
+| No migration tool; tables are created if missing | P2 | open | A change to a column means deleting `depthmap.db` by hand. Entries stored before analysis schema v2 cannot be read. |
+| Reflection length is checked in characters (40 to 1200), not as 2 to 4 sentences | P2 | open | Counting sentences breaks on quotes and abbreviations. |
+| The CLI does not ask for the client's own feeling word | P2 | open | Only `POST /entries` takes `client_emotion`. |
+| A model refusal has no handling of its own | P1 | open | It ends as a provider error or as a failed analysis after one retry. |

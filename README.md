@@ -1,6 +1,6 @@
 # Depth Map
 
-A reflective-questioning tool in two parts. Depth asks specific, open questions and analyzes each answer. Map, which isn't built yet, will track the themes that recur across answers and link each one back to the entries it came from.
+A reflective-questioning tool in two parts. Depth asks specific, open questions and analyzes each answer: it picks themes from a fixed list in `src/depthmap/data/codebook.json`, reads the tone, and writes a short reflection and one follow-up question. Map, which isn't built yet, will track the themes that recur across answers and link each one back to the entries it came from.
 
 ## Run it
 
@@ -24,4 +24,4 @@ The same loop is available over HTTP:
 uvicorn depthmap.api:app
 ```
 
-`GET /questions/next` returns the next question (add `?client_id=...` to pick for another client), `POST /entries` takes `{"question_id": "...", "response": "..."}` and returns the stored entry with its analysis, and `GET /entries` lists entries newest first. The interactive docs are at `http://127.0.0.1:8000/docs`. The server reads and writes the same `depthmap.db`.
+`GET /questions/next` returns the next question (add `?client_id=...` to pick for another client). `POST /entries` takes `{"question_id": "...", "response": "..."}` and returns the stored entry with its analysis. Two more fields are optional: `client_id`, and `client_emotion`, the person's own word for how they felt, which is stored as given and never written by the model. `GET /entries` lists entries newest first. The interactive docs are at `http://127.0.0.1:8000/docs`. The server reads and writes the same `depthmap.db`.
