@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     model: str = "claude-haiku-5-5"
     timeout: float = 60.0
     log_level: str = "INFO"
+    db_path: str = "./depthmap.db"
 
     @model_validator(mode="after")
     def default_provider(self):

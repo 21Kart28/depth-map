@@ -5,6 +5,7 @@ from depthmap.api import create_app
 from depthmap.config import Settings
 from depthmap.providers import FakeProvider
 from depthmap.store import InMemoryRepository
+from depthmap.store_sqlite import SQLiteRepository
 
 
 @pytest.fixture(autouse=True)
@@ -19,9 +20,11 @@ def settings():
     return Settings(_env_file=None, provider="fake")
 
 
-@pytest.fixture
-def repo():
-    return InMemoryRepository()
+@pytest.fixture(params=["memory", "sqlite"])
+def repo(request, tmp_path):
+    if request.param == "memory":
+        return InMemoryRepository()
+    return SQLiteRepository(str(tmp_path / "test.db"))
 
 
 @pytest.fixture

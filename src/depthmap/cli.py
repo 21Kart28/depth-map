@@ -7,7 +7,7 @@ from depthmap.models import DEFAULT_CLIENT_ID, Entry
 from depthmap.prompts.analysis import ANALYSIS_PROMPT_VERSION
 from depthmap.providers import ProviderError, get_provider
 from depthmap.questions import load_bank
-from depthmap.store import InMemoryRepository
+from depthmap.store import get_repository
 
 
 def main():
@@ -21,10 +21,12 @@ def main():
     logging.basicConfig(level=settings.log_level)
     provider = get_provider(settings)
 
-    repo = InMemoryRepository()
-    question = bank.get(args.question_id) if args.question_id else bank.next({})
+    repo = get_repository(settings)
+    counts = repo.count_by_question(DEFAULT_CLIENT_ID)
+    question = bank.get(args.question_id) if args.question_id else bank.next(counts)
 
     print(f"Provider: {provider.name}")
+    print(f"Entries so far: {sum(counts.values())}")
     print("Type q to quit.")
     while True:
         print()

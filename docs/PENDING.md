@@ -67,3 +67,5 @@ Status values: `open`, `in progress`, `done`. Priority: P0 blocks any real-clien
 | Clinician actions (acknowledge, merge, retire themes) are API calls with no UI | P2 | open | |
 | Single-client assumption throughout | P1 | in progress | Every entry has a `client_id` (default `local`) and question counts are scoped by it. Nothing sets another id yet; keep the retrieval index isolated per client when it is built. |
 | Classifier risk stage is optional; rule-based stage is the only guaranteed path | P1 | open | |
+| `questions` table is created but nothing fills it | P2 | open | The bank is still read from JSON and each entry keeps its own copy of the question text. Fill the table when questions can be turned on and off per client. |
+| No migration tool; tables are created if missing | P2 | open | A change to a column means deleting `depthmap.db` by hand. |

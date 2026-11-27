@@ -22,14 +22,14 @@ from depthmap.models import (
 from depthmap.prompts.analysis import ANALYSIS_PROMPT_VERSION
 from depthmap.providers import LLMProvider, ProviderError, get_provider
 from depthmap.questions import load_bank
-from depthmap.store import InMemoryRepository, Repository
+from depthmap.store import Repository, get_repository
 
 logger = logging.getLogger(__name__)
 
 DESCRIPTION = (
     "Depth Map asks one reflective question at a time and stores each answer with an analysis "
     "of it: themes, tone, a short reflection and a follow-up question. Entries are kept in "
-    "memory and are gone when the server stops."
+    "a SQLite file."
 )
 
 NOT_FOUND = {404: {"model": ErrorResponse}}
@@ -51,7 +51,7 @@ def create_app(
     if provider is None:
         provider = get_provider(settings)
     if repo is None:
-        repo = InMemoryRepository()
+        repo = get_repository(settings)
     bank = load_bank()
 
     app = FastAPI(

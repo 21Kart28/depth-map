@@ -1,7 +1,9 @@
 from collections import Counter
 from typing import Protocol
 
+from depthmap.config import Settings
 from depthmap.models import Entry
+from depthmap.store_sqlite import SQLiteRepository
 
 
 class Repository(Protocol):
@@ -35,3 +37,7 @@ class InMemoryRepository:
         # later insert ahead when two entries share a timestamp
         newest_first = sorted(reversed(self._entries), key=lambda e: e.created_at, reverse=True)
         return newest_first[:limit]
+
+
+def get_repository(settings: Settings) -> Repository:
+    return SQLiteRepository(settings.db_path)
