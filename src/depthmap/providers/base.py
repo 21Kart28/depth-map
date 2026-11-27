@@ -7,6 +7,11 @@ class ProviderError(Exception):
     pass
 
 
+class ProviderRefusal(ProviderError):
+    def __init__(self):
+        super().__init__("model refused to answer")
+
+
 class LLMProvider(Protocol):
     """What analyze() needs from a model backend."""
 

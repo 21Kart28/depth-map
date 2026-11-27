@@ -5,7 +5,7 @@ import pytest
 from depthmap.analysis import AnalysisParseError, analyze
 from depthmap.codebook import load_codebook
 from depthmap.prompts.analysis import ANALYSIS_PROMPT_VERSION, build_system_prompt
-from depthmap.providers import FakeProvider, ProviderError
+from depthmap.providers import FakeProvider, ProviderError, ProviderRefusal
 from depthmap.validator import load_rules
 
 QUESTION = "What did you put off this week?"
@@ -113,6 +113,13 @@ def test_client_emotion_passes_through_untouched():
 def test_provider_error_propagates():
     provider = FakeProvider(fail=True)
     with pytest.raises(ProviderError):
+        analyze(QUESTION, ANSWER, provider, CODEBOOK, RULES)
+    assert provider.calls == 1
+
+
+def test_refusal_is_not_retried():
+    provider = FakeProvider(refuse=True)
+    with pytest.raises(ProviderRefusal):
         analyze(QUESTION, ANSWER, provider, CODEBOOK, RULES)
     assert provider.calls == 1
 

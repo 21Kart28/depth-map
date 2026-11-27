@@ -6,24 +6,25 @@ import pytest
 from anthropic.types import TextBlock, ThinkingBlock
 
 from depthmap.models import AnalysisOutput
-from depthmap.providers import AnthropicProvider, ProviderError
+from depthmap.providers import AnthropicProvider, ProviderError, ProviderRefusal
 
 
 class StubMessages:
-    def __init__(self, content=None, error=None):
+    def __init__(self, content=None, error=None, stop_reason="end_turn"):
         self.content = content
         self.error = error
+        self.stop_reason = stop_reason
         self.request = None
 
     def create(self, **request):
         self.request = request
         if self.error:
             raise self.error
-        return SimpleNamespace(content=self.content)
+        return SimpleNamespace(content=self.content, stop_reason=self.stop_reason)
 
 
-def make_provider(content=None, error=None):
-    messages = StubMessages(content, error)
+def make_provider(content=None, error=None, stop_reason="end_turn"):
+    messages = StubMessages(content, error, stop_reason)
     provider = AnthropicProvider(model="test-model", client=SimpleNamespace(messages=messages))
     return provider, messages
 
@@ -53,6 +54,13 @@ def test_empty_content_raises():
     provider, _ = make_provider([])
     with pytest.raises(ProviderError):
         provider.complete_json("s", "u", AnalysisOutput)
+
+
+def test_refusal_raises_its_own_error():
+    for content in ([TextBlock(type="text", text="I can't help with that.")], []):
+        provider, _ = make_provider(content, stop_reason="refusal")
+        with pytest.raises(ProviderRefusal, match="model refused to answer"):
+            provider.complete_json("s", "u", AnalysisOutput)
 
 
 def test_connection_error_is_wrapped():

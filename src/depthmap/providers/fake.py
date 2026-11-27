@@ -4,7 +4,7 @@ import re
 from pydantic import BaseModel
 
 from depthmap.codebook import load_codebook
-from depthmap.providers.base import ProviderError
+from depthmap.providers.base import ProviderError, ProviderRefusal
 
 
 class FakeProvider:
@@ -12,8 +12,15 @@ class FakeProvider:
 
     name = "fake"
 
-    def __init__(self, fail: bool = False, raw: str | None = None, violations: str | None = None):
+    def __init__(
+        self,
+        fail: bool = False,
+        raw: str | None = None,
+        violations: str | None = None,
+        refuse: bool = False,
+    ):
         self.fail = fail
+        self.refuse = refuse
         self.raw = raw
         # a phrase added to every reflection, for driving the output validator in tests
         self.violations = violations
@@ -24,6 +31,8 @@ class FakeProvider:
         self.calls += 1
         if self.fail:
             raise ProviderError("provider failed: fake failure")
+        if self.refuse:
+            raise ProviderRefusal()
         if self.raw is not None:
             return self.raw
 

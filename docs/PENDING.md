@@ -74,4 +74,4 @@ Status values: `open`, `in progress`, `done`. Priority: P0 blocks any real-clien
 | The CLI does not ask for the client's own feeling word | P2 | open | Only `POST /entries` takes `client_emotion`. |
 | The output validator only knows the answer as context | P1 | open | A date is allowed when the answer contains it. References to earlier entries are caught by a few phrases only, and method detail under risk content is not checked; both wait for retrieval and the risk stage. |
 | A reflection that quotes advice from the answer is rejected | P2 | open | The advice, diagnosis, reassurance and praise rules do not look at the answer, so quoting "you should" back fails the entry with a 502. |
-| A model refusal has no handling of its own | P1 | open | It ends as a provider error or as a failed analysis after one retry. |
+| A model refusal has no handling of its own | P1 | done | A reply with stop reason `refusal` raises `ProviderRefusal`: one call, no retry, a 502 `provider_refusal` from the API, one printed line in the CLI, nothing stored. A refusal written as normal text with another stop reason is not detected. |

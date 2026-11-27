@@ -1,9 +1,16 @@
 from depthmap.config import Settings
 from depthmap.providers.anthropic_provider import AnthropicProvider
-from depthmap.providers.base import LLMProvider, ProviderError
+from depthmap.providers.base import LLMProvider, ProviderError, ProviderRefusal
 from depthmap.providers.fake import FakeProvider
 
-__all__ = ["AnthropicProvider", "FakeProvider", "LLMProvider", "ProviderError", "get_provider"]
+__all__ = [
+    "AnthropicProvider",
+    "FakeProvider",
+    "LLMProvider",
+    "ProviderError",
+    "ProviderRefusal",
+    "get_provider",
+]
 
 
 def get_provider(settings: Settings) -> LLMProvider:

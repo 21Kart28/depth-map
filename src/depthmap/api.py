@@ -21,7 +21,7 @@ from depthmap.models import (
     Question,
     QuestionV2,
 )
-from depthmap.providers import LLMProvider, ProviderError, get_provider
+from depthmap.providers import LLMProvider, ProviderError, ProviderRefusal, get_provider
 from depthmap.questions import load_bank
 from depthmap.store import Repository, get_repository
 from depthmap.validator import load_rules
@@ -77,6 +77,12 @@ def create_app(
     async def provider_error(request: Request, error: ProviderError):
         logger.error("%s", error)
         return error_response(502, "provider_error", str(error))
+
+    # the handler for the closest class wins, so a refusal lands here and not in provider_error
+    @app.exception_handler(ProviderRefusal)
+    async def provider_refusal(request: Request, error: ProviderRefusal):
+        logger.error("%s", error)
+        return error_response(502, "provider_refusal", str(error))
 
     @app.exception_handler(AnalysisParseError)
     async def analysis_parse_error(request: Request, error: AnalysisParseError):

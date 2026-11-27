@@ -127,6 +127,14 @@ def test_provider_failure_is_502(make_client):
     assert client.get("/entries").json() == []
 
 
+def test_refusal_is_502(make_client):
+    client = make_client(FakeProvider(refuse=True))
+    reply = post_entry(client)
+    assert reply.status_code == 502
+    assert reply.json() == {"error": "provider_refusal", "detail": "model refused to answer"}
+    assert client.get("/entries").json() == []
+
+
 def test_unparseable_reply_is_502(make_client):
     client = make_client(FakeProvider(raw="not json"))
     reply = post_entry(client)

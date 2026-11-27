@@ -1,7 +1,7 @@
 import anthropic
 from pydantic import BaseModel
 
-from depthmap.providers.base import ProviderError
+from depthmap.providers.base import ProviderError, ProviderRefusal
 
 
 class AnthropicProvider:
@@ -39,6 +39,9 @@ class AnthropicProvider:
         except anthropic.AnthropicError as error:
             raise ProviderError(f"provider failed: {error}") from error
 
+        # checked before the text: a refusal can come with text or with none
+        if message.stop_reason == "refusal":
+            raise ProviderRefusal()
         # thinking blocks can come before the text block
         text = next((block.text for block in message.content if block.type == "text"), "")
         if not text:
