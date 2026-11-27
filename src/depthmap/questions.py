@@ -1,4 +1,5 @@
 import json
+from collections import Counter
 from importlib import resources
 
 from depthmap.models import Question, QuestionV2
@@ -33,9 +34,34 @@ class QuestionBank:
     def get(self, question_id: str) -> Question | QuestionV2 | None:
         return self._by_id.get(question_id)
 
-    def next(self, counts: dict[str, int]) -> Question | QuestionV2:
+    def next(
+        self, history: list[str], enabled_gated: bool = False, pinned_id: str | None = None
+    ) -> Question | QuestionV2:
+        """Pick the next question from the ids answered so far, oldest first."""
+        if pinned_id is not None:
+            return self._by_id[pinned_id]
+        counts = Counter(history)
         # min() returns the first of several equal items, so ties go in file order
-        return min(self.questions, key=lambda q: counts.get(q.id, 0))
+        return min(self.allowed(history, enabled_gated), key=lambda q: counts[q.id])
+
+    def allowed(self, history: list[str], enabled_gated: bool) -> list:
+        return self.questions
+
+
+class QuestionBankV2(QuestionBank):
+    def allowed(self, history: list[str], enabled_gated: bool) -> list[QuestionV2]:
+        ungated = [q for q in self.questions if enabled_gated or not q.clinician_gated]
+        # the last id can be missing from this bank when the history was written on another one
+        last = self.get(history[-1]) if history else None
+        if last is None:
+            return ungated
+        rotated = [
+            q
+            for q in ungated
+            if q.domain != last.domain and not (q.mode == last.mode == "disclosure")
+        ]
+        # a bank too small to rotate still has to return something
+        return rotated or ungated
 
 
 def parse_questions_v2(data: dict) -> list[QuestionV2]:
@@ -68,10 +94,10 @@ def parse_questions_v2(data: dict) -> list[QuestionV2]:
     return questions
 
 
-def load_bank(version: str = "v1") -> QuestionBank:
+def load_bank(version: str) -> QuestionBank:
     data = resources.files("depthmap") / "data"
     if version == "v2":
         items = json.loads((data / "questions.v2.json").read_text(encoding="utf-8"))
-        return QuestionBank(parse_questions_v2(items))
+        return QuestionBankV2(parse_questions_v2(items))
     items = json.loads((data / "questions.json").read_text(encoding="utf-8"))
     return QuestionBank([Question(**item) for item in items])

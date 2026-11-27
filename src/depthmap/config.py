@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     timeout: float = 60.0
     log_level: str = "INFO"
     db_path: str = "./depthmap.db"
-    question_bank: Literal["v1", "v2"] = "v1"
+    question_bank: Literal["v1", "v2"] = "v2"
 
     @model_validator(mode="after")
     def default_provider(self):

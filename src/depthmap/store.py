@@ -1,4 +1,3 @@
-from collections import Counter
 from typing import Protocol
 
 from depthmap.config import Settings
@@ -7,13 +6,13 @@ from depthmap.store_sqlite import SQLiteRepository
 
 
 class Repository(Protocol):
-    """Where entries are kept. list() returns the newest first."""
+    """Where entries are kept. list() is newest first, question_history() oldest first."""
 
     def add(self, entry: Entry) -> Entry: ...
 
     def get(self, entry_id: str) -> Entry | None: ...
 
-    def count_by_question(self, client_id: str) -> dict[str, int]: ...
+    def question_history(self, client_id: str) -> list[str]: ...
 
     def list(self, limit: int = 20) -> list[Entry]: ...
 
@@ -29,8 +28,9 @@ class InMemoryRepository:
     def get(self, entry_id: str) -> Entry | None:
         return next((entry for entry in self._entries if entry.id == entry_id), None)
 
-    def count_by_question(self, client_id: str) -> dict[str, int]:
-        return dict(Counter(e.question_id for e in self._entries if e.client_id == client_id))
+    def question_history(self, client_id: str) -> list[str]:
+        mine = [e for e in self._entries if e.client_id == client_id]
+        return [e.question_id for e in sorted(mine, key=lambda e: e.created_at)]
 
     def list(self, limit: int = 20) -> list[Entry]:
         # sorted() keeps equal items in the order it got them, so reversing first puts the

@@ -22,11 +22,11 @@ def main():
     provider = get_provider(settings)
 
     repo = get_repository(settings)
-    counts = repo.count_by_question(DEFAULT_CLIENT_ID)
-    question = bank.get(args.question_id) if args.question_id else bank.next(counts)
+    history = repo.question_history(DEFAULT_CLIENT_ID)
+    question = bank.next(history, pinned_id=args.question_id)
 
     print(f"Provider: {provider.name}")
-    print(f"Entries so far: {sum(counts.values())}")
+    print(f"Entries so far: {len(history)}")
     print("Type q to quit.")
     while True:
         print()
@@ -68,4 +68,4 @@ def main():
                 provider=provider.name,
             )
         )
-        question = bank.next(repo.count_by_question(DEFAULT_CLIENT_ID))
+        question = bank.next(repo.question_history(DEFAULT_CLIENT_ID))

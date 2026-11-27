@@ -51,14 +51,13 @@ class SQLiteRepository:
             row = db.execute(SELECT_ENTRY + "WHERE e.id = ?", (entry_id,)).fetchone()
         return to_entry(row) if row else None
 
-    def count_by_question(self, client_id: str) -> dict[str, int]:
+    def question_history(self, client_id: str) -> list[str]:
         with closing(connect(self.path)) as db:
             rows = db.execute(
-                "SELECT question_id, COUNT(*) FROM entries WHERE client_id = ?"
-                " GROUP BY question_id",
+                "SELECT question_id FROM entries WHERE client_id = ? ORDER BY created_at, rowid",
                 (client_id,),
             ).fetchall()
-        return dict(rows)
+        return [row["question_id"] for row in rows]
 
     def list(self, limit: int = 20) -> list[Entry]:
         with closing(connect(self.path)) as db:

@@ -96,8 +96,8 @@ def create_app(
 
     # declared before /questions/{question_id}, or "next" would be read as an id
     @app.get("/questions/next")
-    def next_question() -> Question | QuestionV2:
-        return bank.next(repo.count_by_question(DEFAULT_CLIENT_ID))
+    def next_question(client_id: str = DEFAULT_CLIENT_ID) -> Question | QuestionV2:
+        return bank.next(repo.question_history(client_id))
 
     @app.get("/questions/{question_id}", responses=NOT_FOUND)
     def get_question(question_id: str) -> Question | QuestionV2:

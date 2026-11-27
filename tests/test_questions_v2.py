@@ -48,9 +48,8 @@ def test_framing_and_text_are_read():
     assert question.text.endswith("?")
 
 
-def test_v1_is_the_default_bank():
-    assert len(load_bank().questions) == 14
-    assert Settings(_env_file=None).question_bank == "v1"
+def test_v2_is_the_default_bank():
+    assert Settings(_env_file=None).question_bank == "v2"
 
 
 @pytest.mark.parametrize(
@@ -71,13 +70,18 @@ def test_duplicate_id_fails_with_the_id():
         parse_questions_v2({"questions": [make_question(), make_question()]})
 
 
-def test_api_shows_framing_and_domain_on_v2():
-    settings = Settings(_env_file=None, provider="fake", question_bank="v2")
-    app = create_app(settings=settings, provider=FakeProvider(), repo=InMemoryRepository())
-    client = TestClient(app)
-    assert len(client.get("/questions").json()) == 23
+def test_api_shows_framing_and_domain(client):
     question = client.get("/questions/rel-ep-01").json()
     assert question["domain"] == "relationship-episode"
     assert question["framing"]
-    created = client.post("/entries", json={"question_id": "rel-ep-01", "response": "We argued."})
+
+
+def test_api_still_serves_the_v1_bank():
+    settings = Settings(_env_file=None, provider="fake", question_bank="v1")
+    app = create_app(settings=settings, provider=FakeProvider(), repo=InMemoryRepository())
+    client = TestClient(app)
+    assert len(client.get("/questions").json()) == 14
+    first = client.get("/questions/next").json()
+    created = client.post("/entries", json={"question_id": first["id"], "response": "We argued."})
     assert created.status_code == 201
+    assert client.get("/questions/next").json()["id"] != first["id"]

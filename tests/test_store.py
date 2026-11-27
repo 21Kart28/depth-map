@@ -51,12 +51,18 @@ def test_list_limit(repo):
     assert repo.list(limit=1) == [newest]
 
 
-def test_count_by_question_ignores_other_clients(repo):
+def test_question_history_is_oldest_first(repo):
+    repo.add(make_entry("desire-01", created_at=NOW + timedelta(minutes=1)))
+    repo.add(make_entry("avoidance-01", created_at=NOW))
+    repo.add(make_entry("avoidance-02", created_at=NOW + timedelta(minutes=1)))
+    assert repo.question_history("local") == ["avoidance-01", "desire-01", "avoidance-02"]
+
+
+def test_question_history_ignores_other_clients(repo):
     repo.add(make_entry("avoidance-01"))
-    repo.add(make_entry("avoidance-01"))
-    repo.add(make_entry("desire-01"))
     repo.add(make_entry("desire-01", client_id="someone-else"))
-    assert repo.count_by_question("local") == {"avoidance-01": 2, "desire-01": 1}
+    repo.add(make_entry("avoidance-01"))
+    assert repo.question_history("local") == ["avoidance-01", "avoidance-01"]
 
 
 def test_entry_defaults():
