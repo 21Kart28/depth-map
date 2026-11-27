@@ -56,6 +56,7 @@ def test_bad_json_retries_once_then_raises():
         analyze(QUESTION, ANSWER, provider, CODEBOOK, RULES)
     assert provider.calls == 2
     assert raised.value.raw == "not json"
+    assert raised.value.problems[0].startswith("Invalid JSON")
 
 
 def test_retry_succeeds_on_second_reply():

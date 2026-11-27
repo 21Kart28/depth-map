@@ -29,9 +29,9 @@ def repo(request, tmp_path):
 
 @pytest.fixture
 def make_client(settings, repo):
-    def make(provider=None):
+    def make(provider=None, **options):
         app = create_app(settings=settings, provider=provider or FakeProvider(), repo=repo)
-        return TestClient(app)
+        return TestClient(app, **options)
 
     return make
 

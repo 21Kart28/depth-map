@@ -5,6 +5,13 @@ from depthmap.providers import FakeProvider
 ANSWER = "I kept avoiding the call with my landlord about the lease."
 
 
+class CrashingProvider:
+    name = "crashing"
+
+    def complete_json(self, system, user, schema):
+        raise RuntimeError("secret detail")
+
+
 def post_entry(client, question_id="avoid-01", response=ANSWER):
     return client.post("/entries", json={"question_id": question_id, "response": response})
 
@@ -125,7 +132,7 @@ def test_unparseable_reply_is_502(make_client):
     reply = post_entry(client)
     assert reply.status_code == 502
     assert reply.json()["error"] == "analysis_parse_error"
-    assert "Invalid JSON" in reply.json()["detail"]
+    assert reply.json()["detail"].startswith("Invalid JSON")
     assert client.get("/entries").json() == []
 
 
@@ -135,6 +142,16 @@ def test_rejected_reply_is_502(make_client):
     assert reply.status_code == 502
     assert reply.json()["error"] == "analysis_validation_error"
     assert "advice" in reply.json()["detail"]
+    assert client.get("/entries").json() == []
+
+
+def test_crash_is_500_without_the_exception_text(make_client, caplog):
+    client = make_client(CrashingProvider(), raise_server_exceptions=False)
+    reply = post_entry(client)
+    assert reply.status_code == 500
+    assert reply.json() == {"error": "internal_error", "detail": "internal error"}
+    assert "secret" not in reply.text
+    assert "RuntimeError: secret detail" in caplog.text
     assert client.get("/entries").json() == []
 
 

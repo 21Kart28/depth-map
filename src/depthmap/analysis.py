@@ -25,6 +25,12 @@ class AnalysisValidationError(Exception):
         self.violations = violations
 
 
+def problem_text(problem) -> str:
+    # a reply that is not JSON at all has a message but no location
+    where = ".".join(str(part) for part in problem["loc"])
+    return f"{where}: {problem['msg']}" if where else problem["msg"]
+
+
 def analyze(
     question: str,
     response: str,
@@ -42,10 +48,7 @@ def analyze(
         try:
             output = AnalysisOutput.model_validate_json(raw)
         except ValidationError as invalid:
-            problems = [
-                f"{'.'.join(str(part) for part in problem['loc'])}: {problem['msg']}"
-                for problem in invalid.errors()
-            ]
+            problems = [problem_text(problem) for problem in invalid.errors()]
         else:
             # the schema cannot list the codebook ids, so a made-up id is caught here
             problems = [f"themes: unknown id {t}" for t in output.themes if t not in known]

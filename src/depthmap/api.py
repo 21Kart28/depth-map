@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from depthmap import __version__
-from depthmap.analysis import AnalysisParseError, AnalysisValidationError, analyze
+from depthmap.analysis import AnalysisParseError, AnalysisValidationError, analyze, problem_text
 from depthmap.codebook import load_codebook
 from depthmap.config import Settings
 from depthmap.docs import add_docs_page
@@ -70,10 +70,7 @@ def create_app(
 
     @app.exception_handler(RequestValidationError)
     async def validation_error(request: Request, error: RequestValidationError):
-        problems = [
-            f"{'.'.join(str(part) for part in problem['loc'])}: {problem['msg']}"
-            for problem in error.errors()
-        ]
+        problems = [problem_text(problem) for problem in error.errors()]
         return error_response(422, "validation_error", "; ".join(problems))
 
     @app.exception_handler(ProviderError)
@@ -90,6 +87,12 @@ def create_app(
     async def analysis_validation_error(request: Request, error: AnalysisValidationError):
         logger.error("analysis was rejected twice: %s", error)
         return error_response(502, "analysis_validation_error", str(error))
+
+    @app.exception_handler(Exception)
+    async def internal_error(request: Request, error: Exception):
+        # the exception's own text can hold anything, so it goes to the log and not the body
+        logger.error("unhandled error", exc_info=error)
+        return error_response(500, "internal_error", "internal error")
 
     # the routes are plain def, not async def, so FastAPI runs them in a worker thread
     # and the blocking model call does not hold up other requests
