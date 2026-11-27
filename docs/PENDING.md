@@ -9,8 +9,8 @@ Status values: `open`, `in progress`, `done`. Priority: P0 blocks any real-clien
 | Item | Where | Priority | Status | Notes |
 | --- | --- | --- | --- | --- |
 | Codebook v1 definitions reviewed line by line | `src/depthmap/data/codebook.json` | P1 | open | Drafted as placeholder. Each code needs a final definition, example, counter-example, and a check against the no-diagnosis, no-Jung rule. Ideally reviewed by one clinician. |
-| Question bank v2 reviewed against the property list | `src/depthmap/data/questions.json` | P1 | open | Drafted as placeholder. Each question checked against plan v2 section 3.1 and 3.2. No question ships to a client without passing. |
-| Framing sentences rewritten | `questions.json` | P2 | open | Placeholders are serviceable, not good. |
+| Question bank v2 reviewed against the property list | `src/depthmap/data/questions.v2.json` | P1 | open | Drafted as placeholder. Each question checked against plan v2 section 3.1 and 3.2. No question ships to a client without passing. |
+| Framing sentences rewritten | `questions.v2.json` | P2 | open | Placeholders are serviceable, not good. |
 | Prompt v2 rewritten against real model output | `src/depthmap/prompts/analysis.py` | P1 | open | Current prompt is a first draft. |
 | Safe-template text for risk responses | `src/depthmap/safety/templates.py` | P0 | open | Must follow #chatsafe guidance and name real, locale-correct crisis resources. Placeholder text is a stub. |
 | Risk lexicon sourced from a published list | `src/depthmap/safety/lexicon.json` | P0 | open | Placeholder keywords are from memory. Replace with a cited lexicon and validate on an external annotated set. |

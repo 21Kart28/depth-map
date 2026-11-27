@@ -18,6 +18,7 @@ from depthmap.models import (
     ErrorResponse,
     HealthResponse,
     Question,
+    QuestionV2,
 )
 from depthmap.prompts.analysis import ANALYSIS_PROMPT_VERSION
 from depthmap.providers import LLMProvider, ProviderError, get_provider
@@ -52,7 +53,7 @@ def create_app(
         provider = get_provider(settings)
     if repo is None:
         repo = get_repository(settings)
-    bank = load_bank()
+    bank = load_bank(settings.question_bank)
 
     app = FastAPI(
         title="Depth Map API", version=__version__, description=DESCRIPTION, docs_url=None
@@ -90,16 +91,16 @@ def create_app(
         return HealthResponse(status="ok", version=__version__, provider=provider.name)
 
     @app.get("/questions")
-    def list_questions() -> list[Question]:
+    def list_questions() -> list[Question] | list[QuestionV2]:
         return bank.questions
 
     # declared before /questions/{question_id}, or "next" would be read as an id
     @app.get("/questions/next")
-    def next_question() -> Question:
+    def next_question() -> Question | QuestionV2:
         return bank.next(repo.count_by_question(DEFAULT_CLIENT_ID))
 
     @app.get("/questions/{question_id}", responses=NOT_FOUND)
-    def get_question(question_id: str) -> Question:
+    def get_question(question_id: str) -> Question | QuestionV2:
         question = bank.get(question_id)
         if question is None:
             raise HTTPException(404, "question not found")

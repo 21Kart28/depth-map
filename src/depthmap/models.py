@@ -17,6 +17,29 @@ class Question(BaseModel):
     text: str
 
 
+class QuestionV2(BaseModel):
+    """One question from the v2 bank: a framing sentence, then the question."""
+
+    id: str
+    domain: str
+    mode: str
+    framing: str
+    text: str
+    clinician_gated: bool
+    schema_hooks: list[str]
+
+
+class Code(BaseModel):
+    """One theme from the codebook."""
+
+    id: str
+    group: str
+    label: str
+    definition: str
+    example: str
+    counter_example: str
+
+
 class Analysis(BaseModel):
     """The model's reading of one answer."""
 

@@ -3,7 +3,7 @@ import logging
 
 from depthmap.analysis import AnalysisParseError, analyze
 from depthmap.config import Settings
-from depthmap.models import DEFAULT_CLIENT_ID, Entry
+from depthmap.models import DEFAULT_CLIENT_ID, Entry, QuestionV2
 from depthmap.prompts.analysis import ANALYSIS_PROMPT_VERSION
 from depthmap.providers import ProviderError, get_provider
 from depthmap.questions import load_bank
@@ -11,13 +11,13 @@ from depthmap.store import get_repository
 
 
 def main():
-    bank = load_bank()
+    settings = Settings()
+    bank = load_bank(settings.question_bank)
 
     parser = argparse.ArgumentParser(prog="depthmap")
     parser.add_argument("--question-id", choices=[q.id for q in bank.questions])
     args = parser.parse_args()
 
-    settings = Settings()
     logging.basicConfig(level=settings.log_level)
     provider = get_provider(settings)
 
@@ -30,6 +30,8 @@ def main():
     print("Type q to quit.")
     while True:
         print()
+        if isinstance(question, QuestionV2):
+            print(question.framing)
         print(question.text)
         response = input("> ")
         if response.strip().lower() == "q":
