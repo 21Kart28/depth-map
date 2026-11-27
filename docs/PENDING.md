@@ -12,6 +12,7 @@ Status values: `open`, `in progress`, `done`. Priority: P0 blocks any real-clien
 | Question bank v2 reviewed against the property list | `src/depthmap/data/questions.v2.json` | P1 | open | Drafted as placeholder. Each question checked against plan v2 section 3.1 and 3.2. No question ships to a client without passing. |
 | Framing sentences rewritten | `questions.v2.json` | P2 | open | Placeholders are serviceable, not good. |
 | Prompt v2 rewritten against real model output | `src/depthmap/prompts/analysis.py` | P1 | open | Current prompt is a first draft that has never run against the real model. |
+| Output validator rules reviewed pattern by pattern | `src/depthmap/data/banned_terms.json` | P1 | open | Placeholder patterns for advice, diagnosis words, reassurance, praise and dates. They miss a lot and will reject some harmless sentences. |
 | Safe-template text for risk responses | `src/depthmap/safety/templates.py` | P0 | open | Must follow #chatsafe guidance and name real, locale-correct crisis resources. Placeholder text is a stub. |
 | Risk lexicon sourced from a published list | `src/depthmap/safety/lexicon.json` | P0 | open | Placeholder keywords are from memory. Replace with a cited lexicon and validate on an external annotated set. |
 | Client-facing copy (labels, review-latency line, consent text) | client view | P0 | open | Must use the permitted-language list in `04_safety_and_regulatory.md` section 5. |
@@ -24,7 +25,7 @@ Status values: `open`, `in progress`, `done`. Priority: P0 blocks any real-clien
 | Sycophancy hold-out set passes (no agreement with planted distortions) | P0 | open | Synthetic set in `tests/safety/`. |
 | Clinician-set emergency instructions configurable per client | P0 | open | |
 | Adverse-event log categories agreed with a clinician | P1 | open | |
-| Output validator word lists reviewed (advice, diagnosis, reassurance, praise) | P1 | open | |
+| Output validator word lists reviewed (advice, diagnosis, reassurance, praise) | P1 | open | The validator runs on every analysis since the placeholder list was added; the list itself is tracked under content placeholders. |
 
 ## Data and legal (not built in this project; architecture must not preclude them)
 
@@ -71,4 +72,6 @@ Status values: `open`, `in progress`, `done`. Priority: P0 blocks any real-clien
 | No migration tool; tables are created if missing | P2 | open | A change to a column means deleting `depthmap.db` by hand. Entries stored before analysis schema v2 cannot be read. |
 | Reflection length is checked in characters (40 to 1200), not as 2 to 4 sentences | P2 | open | Counting sentences breaks on quotes and abbreviations. |
 | The CLI does not ask for the client's own feeling word | P2 | open | Only `POST /entries` takes `client_emotion`. |
+| The output validator only knows the answer as context | P1 | open | A date is allowed when the answer contains it. References to earlier entries are caught by a few phrases only, and method detail under risk content is not checked; both wait for retrieval and the risk stage. |
+| A reflection that quotes advice from the answer is rejected | P2 | open | The advice, diagnosis, reassurance and praise rules do not look at the answer, so quoting "you should" back fails the entry with a 502. |
 | A model refusal has no handling of its own | P1 | open | It ends as a provider error or as a failed analysis after one retry. |

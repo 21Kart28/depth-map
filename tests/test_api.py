@@ -129,6 +129,15 @@ def test_unparseable_reply_is_502(make_client):
     assert client.get("/entries").json() == []
 
 
+def test_rejected_reply_is_502(make_client):
+    client = make_client(FakeProvider(violations="You should call them today."))
+    reply = post_entry(client)
+    assert reply.status_code == 502
+    assert reply.json()["error"] == "analysis_validation_error"
+    assert "advice" in reply.json()["detail"]
+    assert client.get("/entries").json() == []
+
+
 def test_unknown_route_uses_the_error_shape(client):
     reply = client.get("/no-such-route")
     assert reply.status_code == 404

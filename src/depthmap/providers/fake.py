@@ -12,9 +12,11 @@ class FakeProvider:
 
     name = "fake"
 
-    def __init__(self, fail: bool = False, raw: str | None = None):
+    def __init__(self, fail: bool = False, raw: str | None = None, violations: str | None = None):
         self.fail = fail
         self.raw = raw
+        # a phrase added to every reflection, for driving the output validator in tests
+        self.violations = violations
         self.calls = 0
         self._code_ids = load_codebook().active_ids()
 
@@ -31,6 +33,9 @@ class FakeProvider:
         themes = [code_id for code_id in self._code_ids if words & set(code_id.split("-"))][:4]
         if not themes:
             themes = [self._code_ids[len(answer) % len(self._code_ids)]]
+        reflection = f'You wrote: "{answer[:300]}". This reply stays with those words.'
+        if self.violations:
+            reflection += f" {self.violations}"
         return json.dumps(
             {
                 "themes": themes,
@@ -40,7 +45,7 @@ class FakeProvider:
                 "relational_episode": None,
                 "change_talk": None,
                 "sustain_talk": None,
-                "reflection": f'You wrote: "{answer[:300]}". This reply stays with those words.',
+                "reflection": reflection,
                 "follow_up_question": "What happened right after that?",
             }
         )

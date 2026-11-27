@@ -1,19 +1,21 @@
 import argparse
 import logging
 
-from depthmap.analysis import AnalysisParseError, analyze
+from depthmap.analysis import AnalysisParseError, AnalysisValidationError, analyze
 from depthmap.codebook import load_codebook
 from depthmap.config import Settings
 from depthmap.models import DEFAULT_CLIENT_ID, Entry, QuestionV2
 from depthmap.providers import ProviderError, get_provider
 from depthmap.questions import load_bank
 from depthmap.store import get_repository
+from depthmap.validator import load_rules
 
 
 def main():
     settings = Settings()
     bank = load_bank(settings.question_bank)
     codebook = load_codebook()
+    rules = load_rules()
 
     parser = argparse.ArgumentParser(prog="depthmap")
     parser.add_argument("--question-id", choices=[q.id for q in bank.questions])
@@ -39,11 +41,16 @@ def main():
             break
 
         try:
-            analysis = analyze(question.text, response, provider, codebook)
+            analysis = analyze(question.text, response, provider, codebook, rules)
         except AnalysisParseError as error:
             print("\nthe analysis didn't pass validation:")
             for problem in error.problems:
                 print(f"  {problem}")
+            continue
+        except AnalysisValidationError as error:
+            print("\nthe analysis was rejected:")
+            for violation in error.violations:
+                print(f"  {violation.rule_id}: {violation.message}")
             continue
         except ProviderError as error:
             print(f"\n{error}")

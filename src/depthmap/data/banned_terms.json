@@ -1,0 +1,82 @@
+{
+  "version": "v1-placeholder",
+  "note": "Placeholder rules written to unblock the architecture. Every pattern must be reviewed by hand before any client use. See docs/PENDING.md.",
+  "rules": [
+    {
+      "id": "advice-second-person",
+      "category": "advice",
+      "patterns": [
+        "\\byou (should|shouldn't|must|ought to|need to|have to)\\b",
+        "\\byou (could|might) (try|consider)\\b",
+        "\\b(try|consider) (to|doing|talking|telling|asking|setting|taking)\\b",
+        "\\bhave you (tried|considered|thought about)\\b",
+        "\\bi (would )?(suggest|recommend|advise)\\b",
+        "\\bmy advice\\b",
+        "\\bit (would|might) help to\\b"
+      ],
+      "message": "do not give advice or tell the user what to do"
+    },
+    {
+      "id": "diagnosis-words",
+      "category": "diagnosis",
+      "patterns": [
+        "\\bdiagnos(is|es|e|ed|tic)\\b",
+        "\\bdisorders?\\b",
+        "\\bsymptoms?\\b",
+        "\\bclinical(ly)?\\b",
+        "\\bdepress(ion|ed|ive)\\b",
+        "\\banxiety disorder\\b",
+        "\\bpanic attacks?\\b",
+        "\\btrauma(s|tic|tized)?\\b",
+        "\\b(ptsd|ocd|adhd|bpd)\\b",
+        "\\bbipolar\\b",
+        "\\bnarcissis(t|ts|tic|m)\\b",
+        "\\bcodependen(t|ce|cy)\\b",
+        "\\battachment style\\b",
+        "\\b(catastrophi[sz]ing|cognitive distortions?)\\b"
+      ],
+      "message": "do not use diagnostic or label words"
+    },
+    {
+      "id": "reassurance",
+      "category": "reassurance",
+      "patterns": [
+        "\\byou('ll| will) be (fine|okay|ok|all right|alright)\\b",
+        "\\b(that|this|it)('s| is) (completely |totally |perfectly |so )?(normal|understandable|natural|okay|ok)\\b",
+        "\\bit('s| is) (okay|ok|all right|alright) to\\b",
+        "\\bdon't worry\\b",
+        "\\b(everything|things|it) will (be|get|work)\\b",
+        "\\byou('re| are) not alone\\b",
+        "\\b(anyone|everyone|most people) would\\b"
+      ],
+      "message": "do not reassure the user"
+    },
+    {
+      "id": "praise",
+      "category": "praise",
+      "patterns": [
+        "\\b(great|good|nice|excellent|amazing) (job|work)\\b",
+        "\\bwell done\\b",
+        "\\bgood for you\\b",
+        "\\bproud of you\\b",
+        "\\bthat (took|takes) (real |a lot of )?(courage|strength)\\b",
+        "\\b(that|this|it)('s| is| was) (really |very |so )?(brave|impressive|amazing|wonderful|admirable)\\b"
+      ],
+      "message": "do not praise the user"
+    },
+    {
+      "id": "explicit-date",
+      "category": "date",
+      "allowed_from_context": true,
+      "patterns": [
+        "\\b\\d{4}-\\d{2}-\\d{2}\\b",
+        "\\b\\d{1,2}/\\d{1,2}(/\\d{2,4})?\\b",
+        "\\b(january|february|march|april|may|june|july|august|september|october|november|december) \\d{1,2}(st|nd|rd|th)?\\b",
+        "\\b\\d{1,2}(st|nd|rd|th)? (of )?(january|february|march|april|may|june|july|august|september|october|november|december)\\b",
+        "\\b(in|your|an|the) (last|earlier|previous|past) (entry|entries|answer|answers|session|sessions)\\b",
+        "\\byou (wrote|said|mentioned) (before|earlier|last time|previously)\\b"
+      ],
+      "message": "do not mention a date or an earlier entry that is not in the answer"
+    }
+  ]
+}

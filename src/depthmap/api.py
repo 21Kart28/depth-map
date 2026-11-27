@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from depthmap import __version__
-from depthmap.analysis import AnalysisParseError, analyze
+from depthmap.analysis import AnalysisParseError, AnalysisValidationError, analyze
 from depthmap.codebook import load_codebook
 from depthmap.config import Settings
 from depthmap.docs import add_docs_page
@@ -24,6 +24,7 @@ from depthmap.models import (
 from depthmap.providers import LLMProvider, ProviderError, get_provider
 from depthmap.questions import load_bank
 from depthmap.store import Repository, get_repository
+from depthmap.validator import load_rules
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +56,7 @@ def create_app(
         repo = get_repository(settings)
     bank = load_bank(settings.question_bank)
     codebook = load_codebook()
+    rules = load_rules()
 
     app = FastAPI(
         title="Depth Map API", version=__version__, description=DESCRIPTION, docs_url=None
@@ -83,6 +85,11 @@ def create_app(
     async def analysis_parse_error(request: Request, error: AnalysisParseError):
         logger.error("analysis failed validation twice: %s", error)
         return error_response(502, "analysis_parse_error", str(error))
+
+    @app.exception_handler(AnalysisValidationError)
+    async def analysis_validation_error(request: Request, error: AnalysisValidationError):
+        logger.error("analysis was rejected twice: %s", error)
+        return error_response(502, "analysis_validation_error", str(error))
 
     # the routes are plain def, not async def, so FastAPI runs them in a worker thread
     # and the blocking model call does not hold up other requests
@@ -113,7 +120,9 @@ def create_app(
         if question is None:
             raise HTTPException(404, "question not found")
 
-        analysis = analyze(question.text, body.response, provider, codebook, body.client_emotion)
+        analysis = analyze(
+            question.text, body.response, provider, codebook, rules, body.client_emotion
+        )
         # nothing is stored unless the analysis succeeded
         entry = repo.add(
             Entry(
