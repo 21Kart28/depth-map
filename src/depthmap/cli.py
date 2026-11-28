@@ -1,5 +1,6 @@
 import argparse
 import logging
+import sys
 
 from depthmap.analysis import AnalysisParseError, AnalysisValidationError, analyze
 from depthmap.codebook import load_codebook
@@ -7,7 +8,7 @@ from depthmap.config import Settings
 from depthmap.models import DEFAULT_CLIENT_ID, Entry, QuestionV2
 from depthmap.providers import ProviderError, get_provider
 from depthmap.questions import load_bank
-from depthmap.store import get_repository
+from depthmap.store import OldSchemaError, get_repository
 from depthmap.validator import load_rules
 
 
@@ -25,7 +26,10 @@ def main():
     provider = get_provider(settings)
 
     repo = get_repository(settings)
-    history = repo.question_history(DEFAULT_CLIENT_ID)
+    try:
+        history = repo.question_history(DEFAULT_CLIENT_ID)
+    except OldSchemaError as error:
+        sys.exit(str(error))
     question = bank.next(history, pinned_id=args.question_id)
 
     print(f"Provider: {provider.name}")

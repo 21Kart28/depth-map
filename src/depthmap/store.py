@@ -1,8 +1,12 @@
 from typing import Protocol
 
 from depthmap.config import Settings
+from depthmap.db import OldSchemaError
 from depthmap.models import Entry
 from depthmap.store_sqlite import SQLiteRepository
+
+# OldSchemaError is passed on from db.py so callers get everything about storage from here
+__all__ = ["InMemoryRepository", "OldSchemaError", "Repository", "get_repository"]
 
 
 class Repository(Protocol):

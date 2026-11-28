@@ -24,10 +24,32 @@ CREATE TABLE IF NOT EXISTS analyses (
 );
 """
 
+# the entries columns the queries in store_sqlite.py read and write
+ENTRY_COLUMNS = {
+    "id",
+    "client_id",
+    "question_id",
+    "question_text",
+    "response",
+    "created_at",
+    "prompt_version",
+    "codebook_version",
+    "provider",
+}
+
+
+class OldSchemaError(Exception):
+    pass
+
 
 def connect(path: str) -> sqlite3.Connection:
     """Open the database file and create the tables if they are missing."""
     db = sqlite3.connect(path)
     db.row_factory = sqlite3.Row
     db.executescript(SCHEMA)
+    # CREATE TABLE IF NOT EXISTS leaves an entries table from an older version as it was
+    columns = {row["name"] for row in db.execute("PRAGMA table_info(entries)")}
+    if ENTRY_COLUMNS - columns:
+        db.close()
+        raise OldSchemaError(f"{path} has an old schema, delete the file")
     return db

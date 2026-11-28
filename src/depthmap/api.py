@@ -23,7 +23,7 @@ from depthmap.models import (
 )
 from depthmap.providers import LLMProvider, ProviderError, ProviderRefusal, get_provider
 from depthmap.questions import load_bank
-from depthmap.store import Repository, get_repository
+from depthmap.store import OldSchemaError, Repository, get_repository
 from depthmap.validator import load_rules
 
 logger = logging.getLogger(__name__)
@@ -93,6 +93,11 @@ def create_app(
     async def analysis_validation_error(request: Request, error: AnalysisValidationError):
         logger.error("analysis was rejected twice: %s", error)
         return error_response(502, "analysis_validation_error", str(error))
+
+    @app.exception_handler(OldSchemaError)
+    async def old_schema(request: Request, error: OldSchemaError):
+        logger.error("%s", error)
+        return error_response(500, "old_schema", str(error))
 
     @app.exception_handler(Exception)
     async def internal_error(request: Request, error: Exception):
