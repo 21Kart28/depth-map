@@ -154,8 +154,10 @@ def create_app(
         return entry
 
     @app.get("/entries")
-    def list_entries(limit: Annotated[int, Query(ge=1, le=100)] = 20) -> list[Entry]:
-        return repo.list(limit)
+    def list_entries(
+        client_id: str = DEFAULT_CLIENT_ID, limit: Annotated[int, Query(ge=1, le=100)] = 20
+    ) -> list[Entry]:
+        return repo.list(client_id, limit)
 
     @app.get("/entries/{entry_id}", responses=NOT_FOUND)
     def get_entry(entry_id: str) -> Entry:

@@ -66,7 +66,7 @@ Status values: `open`, `in progress`, `done`. Priority: P0 blocks any real-clien
 | --- | --- | --- | --- |
 | Clinician report is a markdown export, not a UI | P2 | open | Fine for this project. |
 | Clinician actions (acknowledge, merge, retire themes) are API calls with no UI | P2 | open | |
-| Single-client assumption throughout | P1 | in progress | Every entry has a `client_id` (default `local`) and the question history behind `GET /questions/next` is scoped by it. Nothing sets another id yet; keep the retrieval index isolated per client when it is built. |
+| Single-client assumption throughout | P1 | in progress | Every entry has a `client_id` (default `local`). The question history behind `GET /questions/next` and the list behind `GET /entries` are scoped by it. `GET /entries/{id}` still returns any client's entry to whoever has the id, the CLI always uses `local`, and nothing checks who is asking. Keep the retrieval index isolated per client when it is built. |
 | Classifier risk stage is optional; rule-based stage is the only guaranteed path | P1 | open | |
 | `questions` table is created but nothing fills it | P2 | open | The bank is still read from JSON and each entry keeps its own copy of the question text. Fill the table when questions can be turned on and off per client. |
 | No migration tool; tables are created if missing | P2 | open | A change to a column still means deleting `depthmap.db` by hand. A file whose `entries` table lacks a column the code uses, which covers every file from before analysis schema v2, is refused with one message that says to delete it: a 500 `old_schema` from the API, one line and an exit from the CLI. Only the column names of `entries` are compared. |

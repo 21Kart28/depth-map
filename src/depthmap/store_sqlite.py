@@ -2,7 +2,7 @@ from contextlib import closing
 from datetime import UTC
 
 from depthmap.db import connect
-from depthmap.models import Analysis, Entry
+from depthmap.models import DEFAULT_CLIENT_ID, Analysis, Entry
 
 SELECT_ENTRY = """
 SELECT e.id, e.client_id, e.question_id, e.question_text, e.response, e.created_at,
@@ -61,9 +61,11 @@ class SQLiteRepository:
             ).fetchall()
         return [row["question_id"] for row in rows]
 
-    def list(self, limit: int = 20) -> list[Entry]:
+    def list(self, client_id: str = DEFAULT_CLIENT_ID, limit: int = 20) -> list[Entry]:
         with closing(connect(self.path)) as db:
             rows = db.execute(
-                SELECT_ENTRY + "ORDER BY e.created_at DESC, e.rowid DESC LIMIT ?", (limit,)
+                SELECT_ENTRY
+                + "WHERE e.client_id = ? ORDER BY e.created_at DESC, e.rowid DESC LIMIT ?",
+                (client_id, limit),
             ).fetchall()
         return [to_entry(row) for row in rows]

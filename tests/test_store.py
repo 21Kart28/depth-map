@@ -60,6 +60,19 @@ def test_list_limit(repo):
     assert repo.list(limit=1) == [newest]
 
 
+def test_list_is_per_client(repo):
+    mine = repo.add(make_entry())
+    theirs = repo.add(make_entry(client_id="someone-else"))
+    assert repo.list() == [mine]
+    assert repo.list("someone-else") == [theirs]
+
+
+def test_list_limit_counts_one_client_only(repo):
+    mine = repo.add(make_entry(created_at=NOW))
+    repo.add(make_entry(client_id="someone-else", created_at=NOW + timedelta(minutes=1)))
+    assert repo.list(limit=1) == [mine]
+
+
 def test_question_history_is_oldest_first(repo):
     repo.add(make_entry("desire-01", created_at=NOW + timedelta(minutes=1)))
     repo.add(make_entry("avoidance-01", created_at=NOW))

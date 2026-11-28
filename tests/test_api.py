@@ -114,6 +114,16 @@ def test_limit_returns_newest(client):
     assert client.get("/entries", params={"limit": 1}).json() == [newest]
 
 
+def test_entries_are_listed_per_client(client):
+    mine = post_entry(client).json()
+    body = {"question_id": "avoid-01", "response": ANSWER, "client_id": "someone-else"}
+    theirs = client.post("/entries", json=body).json()
+    assert client.get("/entries").json() == [mine]
+    assert client.get("/entries", params={"client_id": "local"}).json() == [mine]
+    assert client.get("/entries", params={"client_id": "someone-else"}).json() == [theirs]
+    assert client.get("/entries", params={"client_id": "nobody"}).json() == []
+
+
 def test_limit_out_of_range_is_422(client):
     assert client.get("/entries", params={"limit": 0}).status_code == 422
 
