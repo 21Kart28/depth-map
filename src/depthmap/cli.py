@@ -36,9 +36,12 @@ def main():
         if isinstance(question, QuestionV2):
             print(question.framing)
         print(question.text)
-        response = input("> ")
-        if response.strip().lower() == "q":
+        response = input("> ").strip()
+        if response.lower() == "q":
             break
+        # the API refuses a blank answer, so here the question is asked again
+        if not response:
+            continue
 
         try:
             analysis = analyze(question.text, response, provider, codebook, rules)
